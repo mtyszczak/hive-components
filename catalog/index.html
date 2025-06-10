@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hive Components Catalog</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          Inter,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f8f9fa;
+        color: #212529;
+        line-height: 1.6;
+      }
+
+      .header {
+        background: #e31337;
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+      }
+
+      .header p {
+        margin: 0.5rem 0 0 0;
+        font-size: 1.125rem;
+        opacity: 0.9;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .section {
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .section-header {
+        background: #2c3e50;
+        color: white;
+        padding: 1rem 2rem;
+      }
+
+      .dark .section-header {
+        background: #495057;
+      }
+
+      .section-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      .dark .section-content {
+        background: #343a40;
+      }
+
+      .section-content {
+        padding: 2rem;
+      }
+
+      .component-demo {
+        margin-bottom: 2rem;
+      }
+
+      .component-demo:last-child {
+        margin-bottom: 0;
+      }
+
+      .demo-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 0 0 1rem 0;
+        color: #2c3e50;
+      }
+
+      .dark .demo-title {
+        color: #f8f9fa;
+      }
+
+      .demo-description {
+        color: #6c757d;
+        margin: 0 0 1rem 0;
+        font-size: 0.875rem;
+      }
+
+      .dark .demo-description {
+        color: #adb5bd;
+      }
+
+      .dark .code-block {
+        background: #343a40;
+        border: 1px solid #495057;
+        color: #f8f9fa;
+      }
+
+      .code-block {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: #343a40;
+        border-radius: 4px;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+        font-size: 0.875rem;
+        overflow-x: auto;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 2rem;
+      }
+
+      .theme-controls {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        align-items: center;
+      }
+
+      .theme-button {
+        padding: 0.5rem 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .theme-button.active {
+        background: #e31337;
+        color: white;
+        border-color: #e31337;
+      }
+
+      .theme-button:hover {
+        border-color: #e31337;
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 1rem;
+        }
+
+        .section-content {
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1>Hive Components</h1>
+      <p>Reusable Web Components for the Hive Blockchain</p>
+    </header>
+
+    <div class="container">
+      <div class="theme-controls">
+        <label>Theme:</label>
+        <button class="theme-button active" data-theme="light">Light</button>
+        <button class="theme-button" data-theme="dark">Dark</button>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>🏛️ Hive Witness Component</h2>
+        </div>
+        <div class="section-content">
+          <div class="component-demo">
+            <h3 class="demo-title">Basic Witness Display</h3>
+            <p class="demo-description">
+              Display information about a Hive witness including their stats, proposals, and voting information.
+            </p>
+            <div class="code-block">&lt;hive-witness theme="light" account="gtg"&gt;&lt;/hive-witness&gt;</div>
+            <hive-witness theme="light" account="gtg"></hive-witness>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>📝 Hive Post Component</h2>
+        </div>
+        <div class="section-content">
+          <div class="grid">
+            <div class="component-demo">
+              <h3 class="demo-title">Full Post Display</h3>
+              <p class="demo-description">
+                Display a complete Hive post with author information, content, and metadata.
+              </p>
+              <div class="code-block">
+                &lt;hive-post theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;
+              </div>
+              <hive-post theme="light" permlink="@gtg/hello-world"></hive-post>
+            </div>
+
+            <div class="component-demo">
+              <h3 class="demo-title">Post Preview</h3>
+              <p class="demo-description">Display a truncated preview of a post, perfect for lists and feeds.</p>
+              <div class="code-block">
+                &lt;hive-post theme="light" permlink="@gtg/hello-world" preview max-length="100"&gt;&lt;/hive-post&gt;
+              </div>
+              <hive-post theme="light" permlink="@gtg/hello-world" preview max-length="100"></hive-post>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>🎮 Hive Controls Component</h2>
+        </div>
+        <div class="section-content">
+          <div class="component-demo">
+            <h3 class="demo-title">Interactive Post Controls</h3>
+            <p class="demo-description">Voting, commenting, reblogging, and sharing controls for Hive posts.</p>
+            <div class="code-block">
+              &lt;hive-controls theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-controls&gt;
+            </div>
+            <hive-controls theme="light" permlink="@gtg/hello-world"></hive-controls>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>💬 Hive Comments Component</h2>
+        </div>
+        <div class="section-content">
+          <div class="component-demo">
+            <h3 class="demo-title">Post Comments</h3>
+            <p class="demo-description">Display threaded comments for a Hive post with nested replies and voting.</p>
+            <div class="code-block">
+              &lt;hive-comments theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-comments&gt;
+            </div>
+            <hive-comments theme="light" permlink="@gtg/hello-world"></hive-comments>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>🏷️ Hive Tag Component</h2>
+        </div>
+        <div class="section-content">
+          <div class="component-demo">
+            <h3 class="demo-title">Tag Posts Feed</h3>
+            <p class="demo-description">Display posts from a specific tag with pagination and custom URL templates.</p>
+            <div class="code-block">
+              &lt;hive-tag theme="light" tag="biography" posts-per-page="4"
+              url-template="/biography/{permlink}"&gt;&lt;/hive-tag&gt;
+            </div>
+            <hive-tag
+              theme="light"
+              tag="photography"
+              posts-per-page="4"
+              url-template="/photography/{permlink}"
+            ></hive-tag>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>📚 Usage Examples</h2>
+        </div>
+        <div class="section-content">
+          <div class="component-demo">
+            <h3 class="demo-title">Complete Integration Example</h3>
+            <p class="demo-description">Here's how you would typically use these components together:</p>
+            <div class="code-block">
+              &lt;!-- Include the components script --&gt;<br>&lt;script
+              src="https://openhive.network/dev/hive-components.js" type="module"&gt;&lt;/script&gt;<br><br>&lt;!-- Use the
+              components --&gt;<br>&lt;hive-witness theme="light" account="gtg" /&gt;<br>&lt;hive-post theme="light"
+              permlink="@gtg/hello-world" /&gt;<br>&lt;hive-controls theme="light" permlink="@gtg/hello-world" /&gt;<br>
+              &lt;hive-comments theme="light" permlink="@gtg/hello-world" /&gt;<br>&lt;hive-tag theme="light"
+              tag="biography" posts-per-page="4" url-template="/biography/{permlink}" /&gt;
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      // Import all components
+      import "../packages/component-witness/dist/bundle.js";
+      import "../packages/component-post/dist/bundle.js";
+      import "../packages/component-controls/dist/bundle.js";
+      import "../packages/component-comments/dist/bundle.js";
+      import "../packages/component-tag/dist/bundle.js";
+
+      // Theme switching functionality
+      const themeButtons = document.querySelectorAll(".theme-button");
+      const components = document.querySelectorAll("hive-witness, hive-post, hive-controls, hive-comments, hive-tag");
+
+      themeButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          const theme = button.dataset.theme;
+
+          // Update active button
+          themeButtons.forEach(btn => btn.classList.remove("active"));
+          button.classList.add("active");
+
+          // Update all components
+          components.forEach(component => {
+            component.setAttribute("theme", theme);
+          });
+
+          // Update body theme for demo
+          if (theme === "dark") {
+            document.body.classList.add("dark");
+            document.body.style.background = "#1a1a1a";
+            document.body.style.color = "#ffffff";
+          } else {
+            document.body.classList.remove("dark");
+            document.body.style.background = "#f8f9fa";
+            document.body.style.color = "#212529";
+          }
+        });
+      });
+
+      // Event listeners for component interactions
+      document.addEventListener("hive-vote", event => {
+        console.log("Vote event:", event.detail);
+        alert(`Voted on post by ${event.detail.author}`);
+      });
+
+      document.addEventListener("hive-comment", event => {
+        console.log("Comment event:", event.detail);
+        alert(`Opening comment form for ${event.detail.author}/${event.detail.permlink}`);
+      });
+
+      document.addEventListener("hive-reblog", event => {
+        console.log("Reblog event:", event.detail);
+        alert(`Reblogging post by ${event.detail.author}`);
+      });
+
+      document.addEventListener("hive-post-click", event => {
+        console.log("Post click event:", event.detail);
+        alert(`Navigating to: ${event.detail.url}`);
+      });
+    </script>
+  </body>
+</html>
