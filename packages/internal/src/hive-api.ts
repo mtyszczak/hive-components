@@ -72,8 +72,13 @@ export class HiveApiClient {
     return this.makeRequest("condenser_api.get_witness_by_account", [account]);
   }
 
-  async getDiscussionsByTag(tag: string, limit = 20): Promise<HivePost[]> {
-    return this.makeRequest("condenser_api.get_discussions_by_trending", [{ tag, limit }]);
+  async getDiscussionsByTag(tag: string, limit = 20, start_author?: string, start_permlink?: string): Promise<HivePost[]> {
+    const params: any = { tag, limit };
+    if (start_author && start_permlink) {
+      params.start_author = start_author;
+      params.start_permlink = start_permlink;
+    }
+    return this.makeRequest("condenser_api.get_discussions_by_trending", [params]);
   }
 
   async getTrendingTags(afterTag = "", limit = 100): Promise<HiveTag[]> {

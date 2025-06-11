@@ -88,6 +88,13 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
         background: var(--hive-border);
       }
 
+      .load-more-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
       .no-comments {
         padding: 2rem;
         text-align: center;
@@ -125,6 +132,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
   initialLimit = 10;
 
   private comments: HiveComment[] = [];
+  private allComments: HiveComment[] = [];
 
   @state()
   private loading = false;
@@ -144,6 +152,8 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
 
   async updated(changedProperties: Map<string, unknown>) {
     if (changedProperties.has("permlink") && this.permlink) {
+      this.comments = [];
+      this.allComments = [];
       await this.loadComments();
     }
   }
@@ -169,6 +179,10 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
         return new Date(a.created).getTime() - new Date(b.created).getTime();
       });
 
+      // Store all comments for pagination
+      this.allComments = sortedComments;
+      
+      // Show initial batch
       this.comments = sortedComments.slice(0, this.initialLimit);
       this.hasMore = sortedComments.length > this.initialLimit;
     } catch (err) {
@@ -208,22 +222,25 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
   }
 
   private async loadMoreComments() {
-    // In a real implementation, this would load more comments
-    // For now, just show all remaining comments
-    const parsed = parseHiveUrl(this.permlink);
-    if (!parsed) return;
-
+    if (!this.hasMore || this.loading) return;
+    
+    this.loading = true;
+    
     try {
-      const allComments = await hiveApi.getContentReplies(parsed.author, parsed.permlink);
-      this.comments = allComments.sort((a, b) => {
-        if (b.net_votes !== a.net_votes) {
-          return b.net_votes - a.net_votes;
-        }
-        return new Date(a.created).getTime() - new Date(b.created).getTime();
-      });
-      this.hasMore = false;
+      // Calculate how many more comments to show
+      const currentCount = this.comments.length;
+      const nextBatchSize = this.initialLimit;
+      const newCount = Math.min(currentCount + nextBatchSize, this.allComments.length);
+      
+      // Show more comments from the already loaded and sorted list
+      this.comments = this.allComments.slice(0, newCount);
+      
+      // Update hasMore flag
+      this.hasMore = newCount < this.allComments.length;
     } catch (err) {
       console.error("Failed to load more comments:", err);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -248,7 +265,9 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
               <div class="comments-list">${this.comments.map(comment => this.renderComment(comment))}</div>
 
               ${this.hasMore
-                ? html` <button class="load-more-button" @click=${this.loadMoreComments}>Load More Comments</button> `
+                ? html` <button class="load-more-button" @click=${this.loadMoreComments} ?disabled=${this.loading}>
+                    ${this.loading ? "Loading..." : "Load More Comments"}
+                  </button> `
                 : ""}
             `}
       </div>
