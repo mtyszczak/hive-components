@@ -4,13 +4,11 @@ import {
   hiveApi,
   baseStyles,
   themeStyles,
-  formatHiveDate,
-  formatHiveCurrency,
-  calculateReputation,
   truncateText,
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import { type HivePost, renderPostContent } from "@hiveio/internal";
+import "@hiveio/component-post";
 
 @customElement("hive-tag")
 export class HiveTagElement extends withHiveTheme(LitElement) {
@@ -76,79 +74,6 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
         border-bottom: none;
       }
 
-      .post-header {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-      }
-
-      .author-avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: var(--hive-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 600;
-        font-size: 1rem;
-        border: 2px solid var(--hive-border);
-        overflow: hidden;
-      }
-
-      .author-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      .post-meta {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .author-name {
-        font-weight: 600;
-        color: var(--hive-on-surface);
-        margin: 0;
-        font-size: 0.95rem;
-        line-height: 1.2;
-      }
-
-      .post-date {
-        margin: 0.25rem 0 0 0;
-        font-size: 0.8rem;
-        color: var(--hive-on-surface-variant);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        line-height: 1.2;
-      }
-
-      .reputation {
-        background: linear-gradient(135deg, var(--hive-primary), color-mix(in srgb, var(--hive-primary) 80%, black));
-        color: white;
-        padding: 0.15rem 0.45rem;
-        border-radius: 14px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-
-      .post-title {
-        margin: 0 0 0.75rem 0;
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--hive-on-surface);
-        line-height: 1.4;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
       .post-preview {
         margin: 0 0 1rem 0;
         color: var(--hive-on-surface-variant);
@@ -174,45 +99,16 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
         transition: color 0.2s ease;
       }
 
-      .post-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-      }
-
-      .post-stats {
-        display: flex;
-        gap: 1.25rem;
-        align-items: center;
-        font-size: 0.8rem;
-        color: var(--hive-on-surface-variant);
-      }
-
-      .stat-item {
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-        font-weight: 500;
-        transition: color 0.2s ease;
-      }
-
-      .stat-item:hover {
-        color: var(--hive-primary);
-      }
-
-      .stat-item span:first-child {
-        font-size: 1rem;
-      }
-
-      .post-payout {
+      .post-title {
+        margin: 0 0 0.75rem 0;
+        font-size: 1.125rem;
         font-weight: 700;
-        color: var(--hive-success);
-        font-size: 0.9rem;
-        padding: 0.25rem 0.75rem;
-        background: color-mix(in srgb, var(--hive-success) 10%, transparent);
-        border-radius: 20px;
-        border: 1px solid color-mix(in srgb, var(--hive-success) 20%, transparent);
+        color: var(--hive-on-surface);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       .load-more-button {
@@ -258,18 +154,8 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
       }
 
       @media (max-width: 640px) {
-        .post-footer {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.5rem;
-        }
-
         .post-preview img {
           max-width: 100%;
-        }
-
-        .post-stats {
-          gap: 0.75rem;
         }
       }
     `,
@@ -346,14 +232,6 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
     await this.loadPosts(true);
   }
 
-  private getInitials(name: string): string {
-    return name.substring(0, 2).toUpperCase();
-  }
-
-  private getProfileImageUrl(author: string): string {
-    return `https://images.hive.blog/u/${author}/avatar/medium`;
-  }
-
   private getPostUrl(post: HivePost): string {
     if (this.urlTemplate) {
       return this.urlTemplate.replace("{permlink}", post.permlink).replace("{author}", post.author);
@@ -411,51 +289,24 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
           : html`
               <div class="posts-list">
                 ${this.posts.map(post => {
-                  const reputation = calculateReputation(post.author_reputation);
                   const preview = renderPostContent(truncateText(post.body.replace(/<[^>]*>/g, ""), this.previewLength));
 
                   return html`
                     <article class="post-item" @click=${() => this.handlePostClick(post)}>
-                      <div class="post-header">
-                        <div class="author-avatar">
-                          <img
-                            src="${this.getProfileImageUrl(post.author)}"
-                            alt="${post.author}"
-                            @error=${(e: Event) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                              target.parentElement!.textContent = this.getInitials(post.author);
-                            }}
-                          />
-                        </div>
-                        <div class="post-meta">
-                          <h4 class="author-name">@${post.author}</h4>
-                          <p class="post-date">
-                            <span class="reputation">${reputation}</span>
-                            <span>${formatHiveDate(post.created)}</span>
-                          </p>
-                        </div>
-                      </div>
+                      <hive-post-header 
+                        .post=${post} 
+                        show-title="false">
+                      </hive-post-header>
 
                       ${post.title ? html` <h3 class="post-title">${post.title}</h3> ` : ""}
 
                       <p class="post-preview" .innerHTML=${preview}></p>
 
-                      <div class="post-footer">
-                        <div class="post-stats">
-                          <div class="stat-item">
-                            <span>❤️</span>
-                            <span>${post.net_votes || post.active_votes.length}</span>
-                          </div>
-                          <div class="stat-item">
-                            <span>💬</span>
-                            <span>${post.children}</span>
-                          </div>
-                        </div>
-                        <div class="post-payout">
-                          ${formatHiveCurrency(post.cashout_time === "1969-12-31T23:59:59" ? post.total_payout_value : post.pending_payout_value)}
-                        </div>
-                      </div>
+                      <hive-post-footer 
+                        .post=${post} 
+                        show-tags="false"
+                        show-link="false">
+                      </hive-post-footer>
                     </article>
                   `;
                 })}

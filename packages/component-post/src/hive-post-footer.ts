@@ -65,6 +65,7 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
         color: var(--hive-on-surface-variant);
         padding: 0.25rem 0.5rem;
         border-radius: 12px;
+        border: 1px solid var(--hive-border);
         font-size: 0.75rem;
         text-decoration: none;
       }
@@ -81,14 +82,23 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
         gap: 0.25rem;
       }
 
+      .payout-info.paid-out .payout-value {
+        color: var(--hive-on-surface-variant);
+        background: color-mix(in srgb, var(--hive-on-surface-variant) 10%, transparent);
+        border: 1px solid color-mix(in srgb, var(--hive-on-surface-variant) 20%, transparent);
+      }
+
+      .payout-info.pending-payout .payout-value {
+        color: var(--hive-success);
+        background: color-mix(in srgb, var(--hive-success) 10%, transparent);
+        border: 1px solid color-mix(in srgb, var(--hive-success) 20%, transparent);
+      }
+
       .payout-value {
         font-weight: 700;
-        color: var(--hive-success);
         font-size: 0.9rem;
         padding: 0.25rem 0.75rem;
-        background: color-mix(in srgb, var(--hive-success) 10%, transparent);
         border-radius: 20px;
-        border: 1px solid color-mix(in srgb, var(--hive-success) 20%, transparent);
       }
 
       .post-url {
@@ -223,12 +233,9 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
         </div>
 
         ${this.showPayout ? html`
-          <div class="payout-info">
+          <div class="payout-info ${currentPost.cashout_time === "1969-12-31T23:59:59" ? 'paid-out' : 'pending-payout'}">
             <div class="payout-value">
               ${formatHiveCurrency(currentPost.cashout_time === "1969-12-31T23:59:59" ? currentPost.total_payout_value : currentPost.pending_payout_value)}
-            </div>
-            <div style="font-size: 0.75rem; margin-right: 5px; color: var(--hive-on-surface-variant);">
-              ${currentPost.cashout_time === "1969-12-31T23:59:59" ? 'Paid out' : 'Pending Payout'}
             </div>
           </div>
         ` : ''}

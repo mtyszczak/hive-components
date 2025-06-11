@@ -105,19 +105,19 @@ export const baseStyles = css`
     font-size: 1rem;
     line-height: 1.5;
     color: var(--hive-on-surface, #212529);
-    background-color: var(--hive-surface, #ffffff);
+    /* background-color: var(--hive-surface, #ffffff); */
     box-sizing: border-box;
   }
 
   :host([theme="dark"]) {
     color: var(--hive-on-surface, #ffffff);
-    background-color: var(--hive-surface, #1a1a1a);
+    /* background-color: var(--hive-surface, #1a1a1a); */
   }
 
   @media (prefers-color-scheme: dark) {
     :host([theme="auto"]) {
       color: var(--hive-on-surface, #ffffff);
-      background-color: var(--hive-surface, #1a1a1a);
+      /* background-color: var(--hive-surface, #1a1a1a); */
     }
   }
 
