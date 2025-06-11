@@ -217,7 +217,7 @@ export class HiveWitnessElement extends withHiveTheme(LitElement) {
 
         <div class="witness-stats">
           <div class="stat-item">
-            <div class="stat-value">${this.witness.votes.toLocaleString()}</div>
+            <div class="stat-value">${BigInt(this.witness.votes).toLocaleString()}</div>
             <div class="stat-label">Votes</div>
           </div>
           <div class="stat-item">
@@ -225,7 +225,7 @@ export class HiveWitnessElement extends withHiveTheme(LitElement) {
             <div class="stat-label">Missed Blocks</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value">${formatHiveDate(this.witness.last_confirmed_block_num.toString())}</div>
+            <div class="stat-value">${this.witness.last_confirmed_block_num.toLocaleString()}</div>
             <div class="stat-label">Last Block</div>
           </div>
         </div>

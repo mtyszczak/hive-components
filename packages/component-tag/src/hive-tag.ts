@@ -380,7 +380,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
                           </div>
                         </div>
                         <div class="post-payout">
-                          ${formatHiveCurrency(post.pending_payout_value || post.total_payout_value)}
+                          ${formatHiveCurrency(post.vote_rshares == 0 ? post.total_payout_value : post.pending_payout_value)}
                         </div>
                       </div>
                     </article>

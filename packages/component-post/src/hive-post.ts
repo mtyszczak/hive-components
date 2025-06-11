@@ -304,12 +304,12 @@ export class HivePostElement extends withHiveTheme(LitElement) {
             <div class="stat-item">
               <span>💬 ${this.post.children}</span>
             </div>
-            <a href="${this.post.url}" target="_blank" rel="noopener" class="post-url"> View on Hive </a>
+            <a href="https://hive.blog${this.post.url}" target="_blank" rel="noopener" class="post-url"> View on Hive </a>
           </div>
 
           <div class="payout-info">
-            <div class="payout-value">${formatHiveCurrency(this.post.pending_payout_value)}</div>
-            <div style="font-size: 0.75rem; color: var(--hive-on-surface-variant);">Pending Payout</div>
+            <div class="payout-value">${formatHiveCurrency(this.post.vote_rshares == 0 ? this.post.total_payout_value : this.post.pending_payout_value)}</div>
+            <div style="font-size: 0.75rem; color: var(--hive-on-surface-variant);">${this.post.vote_rshares == 0 ? 'Paid out' : 'Pending Payout'}</div>
           </div>
         </footer>
 

@@ -344,7 +344,7 @@ export class HiveControlsElement extends withHiveTheme(LitElement) {
 
         <div class="payout-display">
           <div class="payout-value">
-            ${formatHiveCurrency(this.post.pending_payout_value || this.post.total_payout_value)}
+            ${formatHiveCurrency(this.post.vote_rshares == 0 ? this.post.total_payout_value : this.post.pending_payout_value)}
           </div>
           <div class="payout-label">${this.post.pending_payout_value !== "0.000 HBD" ? "Pending" : "Total"}</div>
         </div>

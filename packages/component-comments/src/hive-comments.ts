@@ -271,7 +271,6 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
             <p class="comment-details">
               <span class="reputation">${reputation}</span>
               <span>${formatHiveDate(comment.created)}</span>
-              ${comment.depth > 0 ? html`<span>• Reply</span>` : ""}
             </p>
           </div>
         </div>
@@ -288,7 +287,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
             <span>${comment.children}</span>
           </div>
           <div class="comment-payout">
-            ${formatHiveCurrency(comment.pending_payout_value || comment.total_payout_value)}
+            ${formatHiveCurrency(comment.vote_rshares == 0 ? comment.total_payout_value : comment.pending_payout_value)}
           </div>
         </div>
       </div>

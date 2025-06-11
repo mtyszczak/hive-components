@@ -14,6 +14,8 @@ export interface HivePost {
   pending_payout_value: string;
   total_payout_value: string;
   curator_payout_value: string;
+  vote_rshares: number;
+  total_vote_weight: number;
   url: string;
 }
 
@@ -82,6 +84,7 @@ export interface HiveComment {
     account: string;
     weight: number;
   }[];
+  url: string;
 }
 
 export interface HiveTag {
