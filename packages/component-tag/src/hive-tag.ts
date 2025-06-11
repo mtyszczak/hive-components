@@ -10,7 +10,7 @@ import {
   truncateText,
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
-import type { HivePost } from "@hiveio/internal";
+import { type HivePost, renderPostContent } from "@hiveio/internal";
 
 @customElement("hive-tag")
 export class HiveTagElement extends withHiveTheme(LitElement) {
@@ -140,6 +140,20 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
         font-size: 0.875rem;
       }
 
+      .post-preview img {
+        width: auto;
+        max-width: 50%;
+        height: auto;
+        max-height: none;
+        margin-bottom: 10px;
+      }
+
+      .post-preview a {
+        color: var(--hive-primary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
       .post-footer {
         display: flex;
         align-items: center;
@@ -207,6 +221,10 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
           flex-direction: column;
           align-items: flex-start;
           gap: 0.5rem;
+        }
+
+        .post-preview img {
+          max-width: 100%;
         }
 
         .post-stats {
@@ -349,7 +367,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
               <div class="posts-list">
                 ${this.posts.map(post => {
                   const reputation = calculateReputation(post.author_reputation);
-                  const preview = truncateText(post.body.replace(/<[^>]*>/g, ""), this.previewLength);
+                  const preview = renderPostContent(truncateText(post.body.replace(/<[^>]*>/g, ""), this.previewLength));
 
                   return html`
                     <article class="post-item" @click=${() => this.handlePostClick(post)}>
@@ -366,7 +384,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
 
                       ${post.title ? html` <h3 class="post-title">${post.title}</h3> ` : ""}
 
-                      <p class="post-preview">${preview}</p>
+                      <p class="post-preview" .innerHTML=${preview}></p>
 
                       <div class="post-footer">
                         <div class="post-stats">

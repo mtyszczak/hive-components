@@ -6,6 +6,7 @@ import {
   truncateText,
   hiveApi,
   parseHiveUrl,
+  renderPostContent
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HivePost } from "@hiveio/internal";
@@ -25,6 +26,20 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
 
       .post-body {
         margin: 0;
+      }
+
+      .post-body img {
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: none;
+        margin-bottom: 10px;
+      }
+
+      .post-body a {
+        color: var(--hive-primary);
+        text-decoration: none;
+        transition: color 0.2s ease;
       }
 
       .loading {
@@ -104,9 +119,9 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
 
   private renderPostBody(body: string): string {
     if (this.preview) {
-      return truncateText(body, this.maxLength);
+      body = truncateText(body, this.maxLength);
     }
-    return body;
+    return renderPostContent(body);
   }
 
   render() {
@@ -124,11 +139,10 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
       return html``;
     }
 
-    // TODO: unsafeHTML fails here due to MarkDown i think - implement other way to render HTML
     const body = this.renderPostBody(currentPost.body);
 
     return html`
-      <div class="post-body">${body}</div>
+      <div class="post-body" .innerHTML=${body}></div>
     `;
   }
 }

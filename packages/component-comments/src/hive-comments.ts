@@ -8,6 +8,7 @@ import {
   formatHiveCurrency,
   calculateReputation,
   parseHiveUrl,
+  renderPostContent,
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HiveComment } from "@hiveio/internal";
@@ -112,6 +113,20 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
         font-size: 0.875rem;
       }
 
+      .comment-body img {
+        width: auto;
+        max-width: 50%;
+        height: auto;
+        max-height: none;
+        margin-bottom: 10px;
+      }
+
+      .comment-body a {
+        color: var(--hive-primary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
       .comment-footer {
         display: flex;
         align-items: center;
@@ -176,6 +191,10 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
         .nested-comment {
           margin-left: 1rem;
           padding-left: 0.5rem;
+        }
+
+        .comment-body img {
+          max-width: 100%;
         }
 
         .comment {
@@ -259,8 +278,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
 
     const reputation = calculateReputation(comment.author_reputation || 0);
 
-    // TODO: unsafeHTML fails here due to MarkDown i think - implement other way to render HTML
-    const body = (comment.body);
+    const body = renderPostContent(comment.body);
 
     return html`
       <div class="comment ${depth > 0 ? "nested-comment" : ""}">
@@ -275,7 +293,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
           </div>
         </div>
 
-        <div class="comment-body">${body}</div>
+        <div class="comment-body" .innerHTML=${body}></div>
 
         <div class="comment-footer">
           <div class="comment-stat">
