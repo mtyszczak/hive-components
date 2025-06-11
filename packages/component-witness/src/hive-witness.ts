@@ -22,7 +22,7 @@ export class HiveWitnessElement extends withHiveTheme(LitElement) {
         border: 1px solid var(--hive-border);
         border-radius: 8px;
         padding: 1rem;
-        background: var(--hive-surface);
+        /* background: var(--hive-surface); */
       }
 
       .witness-card {
@@ -47,7 +47,15 @@ export class HiveWitnessElement extends withHiveTheme(LitElement) {
         justify-content: center;
         color: white;
         font-weight: 600;
-        font-size: 1.25rem;
+        font-size: 1rem;
+        border: 2px solid var(--hive-border);
+        overflow: hidden;
+      }
+
+      .witness-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .witness-info h3 {
@@ -182,6 +190,10 @@ export class HiveWitnessElement extends withHiveTheme(LitElement) {
     }
   }
 
+  private getProfileImageUrl(author: string): string {
+    return `https://images.hive.blog/u/${author}/avatar/medium`;
+  }
+
   private getInitials(name: string): string {
     return name.substring(0, 2).toUpperCase();
   }
@@ -202,7 +214,17 @@ export class HiveWitnessElement extends withHiveTheme(LitElement) {
     return html`
       <div class="witness-card">
         <div class="witness-header">
-          <div class="witness-avatar">${this.getInitials(this.witness.owner)}</div>
+          <div class="witness-avatar">
+            <img
+              src="${this.getProfileImageUrl(this.witness.owner)}"
+              alt="${this.witness.owner}"
+              @error=${(e: Event) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.parentElement!.textContent = this.getInitials(this.witness?.owner || 'Unknown');
+              }}
+            />
+          </div>
           <div class="witness-info">
             <h3>${this.witness.owner}</h3>
             <p>
