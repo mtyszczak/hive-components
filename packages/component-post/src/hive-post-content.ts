@@ -117,10 +117,12 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
   }
 
   private renderPostBody(body: string): string {
+    let response = renderPostContent(body);
     if (this.preview) {
-      body = truncateText(body, this.maxLength);
+      response = response.replace(/<[^>]+>/g, "");
+      response = truncateText(response, this.maxLength);
     }
-    return renderPostContent(body);
+    return response;
   }
 
   render() {

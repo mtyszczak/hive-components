@@ -219,7 +219,7 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
         <div class="post-stats">
           <div class="stat-item">
             <span>❤️</span>
-            <span>${currentPost.net_votes}</span>
+            <span>${currentPost.net_votes || currentPost.active_votes.length}</span>
           </div>
           <div class="stat-item">
             <span>💬</span>

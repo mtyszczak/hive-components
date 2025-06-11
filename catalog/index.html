@@ -225,9 +225,9 @@
               <h3 class="demo-title">Post Preview</h3>
               <p class="demo-description">Display a truncated preview of a post using separate components.</p>
               <div class="code-block">
-                &lt;hive-post theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br>
+                &lt;hive-post theme="light" preview max-length="100" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br>
               </div>
-              <hive-post theme="light" permlink="@gtg/hello-world"></hive-post>
+              <hive-post theme="light" preview max-length="100" permlink="@gtg/hello-world"></hive-post>
             </div>
           </div>
         </div>
@@ -258,13 +258,13 @@
             <h3 class="demo-title">Tag Posts Feed</h3>
             <p class="demo-description">Display posts from a specific tag with pagination and custom URL templates.</p>
             <div class="code-block">
-              &lt;hive-tag theme="light" tag="photography" posts-per-page="4"
-              url-template="/photography/{permlink}"&gt;&lt;/hive-tag&gt;
+              &lt;hive-tag theme="light" tag="photography" posts-per-page="5" preview-length="150" url-template="/photography/{permlink}"&gt;&lt;/hive-tag&gt;
             </div>
             <hive-tag
               theme="light"
               tag="photography"
-              posts-per-page="4"
+              preview-length="150"
+              posts-per-page="5"
               url-template="/photography/{permlink}"
             ></hive-tag>
           </div>
@@ -301,7 +301,7 @@
 
       // Theme switching functionality
       const themeButtons = document.querySelectorAll(".theme-button");
-      const components = document.querySelectorAll("hive-witness, hive-post-header, hive-post-content, hive-post-footer, hive-comments, hive-tag");
+      const components = document.querySelectorAll("hive-witness, hive-post, hive-comments, hive-tag");
 
       themeButtons.forEach(button => {
         button.addEventListener("click", () => {

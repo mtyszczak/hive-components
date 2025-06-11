@@ -99,18 +99,6 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
         transition: color 0.2s ease;
       }
 
-      .post-title {
-        margin: 0 0 0.75rem 0;
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: var(--hive-on-surface);
-        line-height: 1.4;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
       .load-more-button {
         padding: 1rem;
         text-align: center;
@@ -144,6 +132,45 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
         text-align: center;
         padding: 2rem;
         color: var(--hive-on-surface-variant);
+      }
+
+      .post-item > hive-post-header {
+        padding-bottom: 0;
+      }
+      .post-item > hive-post-footer {
+        padding-top: 0;
+      }
+
+      .preview-img {
+        width: 200px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+
+      .post-content {
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+      }
+      .post-excerpt {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: break-spaces;
+      }
+      .post-title {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--hive-on-surface);
+        line-height: 1.4;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: break-spaces;
       }
 
       .error {
@@ -289,23 +316,38 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
           : html`
               <div class="posts-list">
                 ${this.posts.map(post => {
-                  const preview = renderPostContent(truncateText(post.body.replace(/<[^>]*>/g, ""), this.previewLength));
+                  const preview = truncateText(renderPostContent(post.body, {
+                    breaks: true
+                  }).replace(/<[^>]*>/g, "").replace(/\n/g, " "), this.previewLength);
+
+                  console.log(preview);
+
+                  let imageUrl = "";
+                  try {
+                    imageUrl = JSON.parse(post.json_metadata)?.image?.[0];
+                  } catch {}
 
                   return html`
                     <article class="post-item" @click=${() => this.handlePostClick(post)}>
-                      <hive-post-header 
-                        .post=${post} 
-                        show-title="false">
+                      <hive-post-header
+                        .post=${post}
+                        .theme=${this.theme}
+                        .showTitle=${false}>
                       </hive-post-header>
 
-                      ${post.title ? html` <h3 class="post-title">${post.title}</h3> ` : ""}
+                      <div class="post-content">
+                        <img class="preview-img" src="${imageUrl}" alt="Post image" loading="lazy" />
+                        <div class="post-excerpt">
+                          <h2 class="post-title">${post.title}</h2>
+                          <p class="post-preview" .innerHTML=${preview}></p>
+                        </div>
+                      </div>
 
-                      <p class="post-preview" .innerHTML=${preview}></p>
-
-                      <hive-post-footer 
-                        .post=${post} 
-                        show-tags="false"
-                        show-link="false">
+                      <hive-post-footer
+                        .post=${post}
+                        .theme=${this.theme}
+                        .showTags=${false}
+                        .showLink=${false}>
                       </hive-post-footer>
                     </article>
                   `;

@@ -187,16 +187,19 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
       <div class="comment ${depth > 0 ? "nested-comment" : ""}">
         <hive-post-header
           .post=${comment}
+          .theme=${this.theme}
           .showTitle=${false}>
         </hive-post-header>
 
         <hive-post-content
           .post=${comment}
+          .theme=${this.theme}
           .preview=${false}>
         </hive-post-content>
 
         <hive-post-footer
           .post=${comment}
+          .theme=${this.theme}
           .showTags=${false}
           .showLink=${false}>
         </hive-post-footer>

@@ -93,6 +93,14 @@ export interface HiveComment {
     account: string;
     weight: number;
   }[];
+  active_votes: {
+      voter: string;
+      percent: number;
+      rshares: number;
+      weight: number;
+      reputation: number;
+      time: string;
+  }[];
   url: string;
 }
 

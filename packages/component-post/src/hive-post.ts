@@ -59,7 +59,7 @@ export class HivePostElement extends withHiveTheme(LitElement) {
   @property({ type: Boolean, reflect: true })
   preview = false;
 
-  @property({ type: Number, reflect: true })
+  @property({ type: Number, reflect: true, attribute: "max-length" })
   maxLength = 300;
 
   private post: HivePost | null = null;
@@ -121,9 +121,9 @@ export class HivePostElement extends withHiveTheme(LitElement) {
 
     return html`
       <article class="post-card">
-        <hive-post-header .post=${this.post}></hive-post-header>
-        <hive-post-content .post=${this.post} ?preview=${this.preview} max-length=${this.maxLength}></hive-post-content>
-        <hive-post-footer .post=${this.post}></hive-post-footer>
+        <hive-post-header .theme=${this.theme} .post=${this.post}></hive-post-header>
+        <hive-post-content .theme=${this.theme} .post=${this.post} ?preview=${this.preview} max-length=${this.maxLength}></hive-post-content>
+        <hive-post-footer .theme=${this.theme} .post=${this.post}></hive-post-footer>
       </article>
     `;
   }
