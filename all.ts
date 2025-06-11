@@ -1,6 +1,6 @@
 // Export all components
 export { HiveWitnessElement } from "@hiveio/component-witness";
-export { HivePostElement } from "@hiveio/component-post";
+export { HivePostHeaderElement, HivePostContentElement, HivePostFooterElement } from "@hiveio/component-post";
 export { HiveControlsElement } from "@hiveio/component-controls";
 export { HiveCommentsElement } from "@hiveio/component-comments";
 export { HiveTagElement } from "@hiveio/component-tag";

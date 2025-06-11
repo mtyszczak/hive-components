@@ -213,21 +213,29 @@
             <div class="component-demo">
               <h3 class="demo-title">Full Post Display</h3>
               <p class="demo-description">
-                Display a complete Hive post with author information, content, and metadata.
+                Display a complete Hive post with separate header, content, and footer components.
               </p>
               <div class="code-block">
-                &lt;hive-post theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;
+                &nbsp;&nbsp;&lt;hive-post-header theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post-header&gt;<br>
+                &nbsp;&nbsp;&lt;hive-post-content theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post-content&gt;<br>
+                &nbsp;&nbsp;&lt;hive-post-footer theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post-footer&gt;<br>
               </div>
-              <hive-post theme="light" permlink="@gtg/hello-world"></hive-post>
+              <hive-post-header theme="light" permlink="@gtg/hello-world"></hive-post-header>
+              <hive-post-content theme="light" permlink="@gtg/hello-world"></hive-post-content>
+              <hive-post-footer theme="light" permlink="@gtg/hello-world"></hive-post-footer>
             </div>
 
             <div class="component-demo">
               <h3 class="demo-title">Post Preview</h3>
-              <p class="demo-description">Display a truncated preview of a post, perfect for lists and feeds.</p>
+              <p class="demo-description">Display a truncated preview of a post using separate components.</p>
               <div class="code-block">
-                &lt;hive-post theme="light" permlink="@gtg/hello-world" preview max-length="100"&gt;&lt;/hive-post&gt;
+              &nbsp;&nbsp;&lt;hive-post-header theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post-header&gt;<br>
+              &nbsp;&nbsp;&lt;hive-post-content theme="light" permlink="@gtg/hello-world" preview max-length="100"&gt;&lt;/hive-post-content&gt;<br>
+              &nbsp;&nbsp;&lt;hive-post-footer theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post-footer&gt;<br>
               </div>
-              <hive-post theme="light" permlink="@gtg/hello-world" preview max-length="100"></hive-post>
+              <hive-post-header theme="light" permlink="@gtg/hello-world"></hive-post-header>
+              <hive-post-content theme="light" permlink="@gtg/hello-world" preview max-length="100"></hive-post-content>
+              <hive-post-footer theme="light" permlink="@gtg/hello-world"></hive-post-footer>
             </div>
           </div>
         </div>
@@ -298,8 +306,12 @@
             <div class="code-block">
               &lt;!-- Include the components script --&gt;<br>&lt;script
               src="https://openhive.network/dev/hive-components.js" type="module"&gt;&lt;/script&gt;<br><br>&lt;!-- Use the
-              components --&gt;<br>&lt;hive-witness theme="light" account="gtg" /&gt;<br>&lt;hive-post theme="light"
-              permlink="@gtg/hello-world" /&gt;<br>&lt;hive-controls theme="light" permlink="@gtg/hello-world" /&gt;<br>
+              components --&gt;<br>&lt;hive-witness theme="light" account="gtg" /&gt;<br>
+              &lt;div style="border: 1px solid var(--hive-border); border-radius: 8px; background: var(--hive-surface); overflow: hidden;"&gt;<br>
+              &nbsp;&nbsp;&lt;hive-post-header theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post-header&gt;<br>
+              &nbsp;&nbsp;&lt;hive-post-content theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post-content&gt;<br>
+              &nbsp;&nbsp;&lt;hive-post-footer theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post-footer&gt;<br>
+              &lt;/div&gt;<br>&lt;hive-controls theme="light" permlink="@gtg/hello-world" /&gt;<br>
               &lt;hive-comments theme="light" permlink="@gtg/hello-world" /&gt;<br>&lt;hive-tag theme="light"
               tag="biography" posts-per-page="4" url-template="/biography/{permlink}" /&gt;
             </div>
@@ -318,7 +330,7 @@
 
       // Theme switching functionality
       const themeButtons = document.querySelectorAll(".theme-button");
-      const components = document.querySelectorAll("hive-witness, hive-post, hive-controls, hive-comments, hive-tag");
+      const components = document.querySelectorAll("hive-witness, hive-post-header, hive-post-content, hive-post-footer, hive-controls, hive-comments, hive-tag");
 
       themeButtons.forEach(button => {
         button.addEventListener("click", () => {
@@ -360,11 +372,6 @@
       document.addEventListener("hive-reblog", event => {
         console.log("Reblog event:", event.detail);
         alert(`Reblogging post by ${event.detail.author}`);
-      });
-
-      document.addEventListener("hive-post-click", event => {
-        console.log("Post click event:", event.detail);
-        alert(`Navigating to: ${event.detail.url}`);
       });
     </script>
   </body>

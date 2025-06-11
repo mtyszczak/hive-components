@@ -1,45 +1,41 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import {
-  hiveApi,
   baseStyles,
   themeStyles,
+  truncateText,
+  hiveApi,
   parseHiveUrl,
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HivePost } from "@hiveio/internal";
-import "./hive-post-header.js";
-import "./hive-post-content.js";
-import "./hive-post-footer.js";
 
-@customElement("hive-post")
-export class HivePostElement extends withHiveTheme(LitElement) {
+@customElement("hive-post-content")
+export class HivePostContentElement extends withHiveTheme(LitElement) {
   static styles = [
     baseStyles,
     themeStyles,
     css`
       :host {
         display: block;
-        border: 1px solid var(--hive-border);
-        border-radius: 8px;
-        background: var(--hive-surface);
-        overflow: hidden;
+        padding: 1rem;
+        color: var(--hive-on-surface);
+        line-height: 1.6;
       }
 
-      .post-card {
-        display: flex;
-        flex-direction: column;
+      .post-body {
+        margin: 0;
       }
 
       .loading {
         text-align: center;
-        padding: 2rem;
+        padding: 1rem;
         color: var(--hive-on-surface-variant);
       }
 
       .error {
         text-align: center;
-        padding: 2rem;
+        padding: 1rem;
         color: var(--hive-error);
         background: color-mix(in srgb, var(--hive-error) 10%, transparent);
       }
@@ -49,13 +45,14 @@ export class HivePostElement extends withHiveTheme(LitElement) {
   @property({ type: String, reflect: true })
   permlink = "";
 
+  @property({ type: Object })
+  post: HivePost | null = null;
+
   @property({ type: Boolean, reflect: true })
   preview = false;
 
-  @property({ type: Number, reflect: true })
+  @property({ type: Number, reflect: true, attribute: "max-length" })
   maxLength = 300;
-
-  private post: HivePost | null = null;
 
   @state()
   private loading = false;
@@ -63,16 +60,22 @@ export class HivePostElement extends withHiveTheme(LitElement) {
   @state()
   private error = "";
 
+  @state()
+  private internalPost: HivePost | null = null;
+
   async connectedCallback() {
     super.connectedCallback();
-    if (this.permlink) {
+    if (this.permlink && !this.post) {
       await this.loadPost();
     }
   }
 
   async updated(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has("permlink") && this.permlink) {
-      await this.loadPost();
+    if ((changedProperties.has("permlink") && this.permlink && !this.post) ||
+        (changedProperties.has("preview") || changedProperties.has("maxLength"))) {
+      if (this.permlink && !this.post) {
+        await this.loadPost();
+      }
     }
   }
 
@@ -87,10 +90,10 @@ export class HivePostElement extends withHiveTheme(LitElement) {
     this.error = "";
 
     try {
-      this.post = await hiveApi.getContent(parsed.author, parsed.permlink);
-      if (!this.post.author) {
+      this.internalPost = await hiveApi.getContent(parsed.author, parsed.permlink);
+      if (!this.internalPost.author) {
         this.error = "Post not found";
-        this.post = null;
+        this.internalPost = null;
       }
     } catch (err) {
       this.error = err instanceof Error ? err.message : "Failed to load post";
@@ -99,31 +102,39 @@ export class HivePostElement extends withHiveTheme(LitElement) {
     }
   }
 
+  private renderPostBody(body: string): string {
+    if (this.preview) {
+      return truncateText(body, this.maxLength);
+    }
+    return body;
+  }
+
   render() {
     if (this.loading) {
-      return html`<div class="loading">Loading post...</div>`;
+      return html`<div class="loading">Loading post content...</div>`;
     }
 
     if (this.error) {
       return html`<div class="error">${this.error}</div>`;
     }
 
-    if (!this.post) {
-      return html`<div class="error">No post data available</div>`;
+    const currentPost = this.post || this.internalPost;
+
+    if (!currentPost) {
+      return html``;
     }
 
+    // TODO: unsafeHTML fails here due to MarkDown i think - implement other way to render HTML
+    const body = this.renderPostBody(currentPost.body);
+
     return html`
-      <article class="post-card">
-        <hive-post-header .post=${this.post}></hive-post-header>
-        <hive-post-content .post=${this.post} ?preview=${this.preview} max-length=${this.maxLength}></hive-post-content>
-        <hive-post-footer .post=${this.post}></hive-post-footer>
-      </article>
+      <div class="post-body">${body}</div>
     `;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "hive-post": HivePostElement;
+    "hive-post-content": HivePostContentElement;
   }
 }
