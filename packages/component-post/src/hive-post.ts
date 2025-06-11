@@ -12,7 +12,6 @@ import "./hive-post-header.js";
 import "./hive-post-content.js";
 import "./hive-post-footer.js";
 
-@customElement("hive-post")
 export class HivePostElement extends withHiveTheme(LitElement) {
   static styles = [
     baseStyles,
@@ -42,6 +41,14 @@ export class HivePostElement extends withHiveTheme(LitElement) {
         padding: 2rem;
         color: var(--hive-error);
         background: color-mix(in srgb, var(--hive-error) 10%, transparent);
+      }
+
+      .post-card > hive-post-header {
+        border-bottom: 1px solid var(--hive-border);
+      }
+
+      .post-card > hive-post-footer {
+        border-top: 1px solid var(--hive-border);
       }
     `,
   ];
@@ -126,4 +133,9 @@ declare global {
   interface HTMLElementTagNameMap {
     "hive-post": HivePostElement;
   }
+}
+
+// Safe registration to prevent duplicate registration errors
+if (!customElements.get("hive-post")) {
+  customElements.define("hive-post", HivePostElement);
 }

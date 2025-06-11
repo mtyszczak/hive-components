@@ -13,7 +13,6 @@ A collection of reusable Web Components for the Hive blockchain, built with Type
 <!-- Use the components -->
 <hive-witness theme="light" account="gtg" />
 <hive-post theme="light" permlink="@gtg/hello-world" />
-<hive-controls theme="light" permlink="@gtg/hello-world" />
 <hive-comments theme="light" permlink="@gtg/hello-world" />
 <hive-tag theme="light" tag="biography" posts-per-page="4" url-template="/biography/{permlink}" />
 ```

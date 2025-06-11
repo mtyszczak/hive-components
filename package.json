@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "@hiveio/component-comments": "workspace:*",
-    "@hiveio/component-controls": "workspace:*",
     "@hiveio/component-post": "workspace:*",
     "@hiveio/component-tag": "workspace:*",
     "@hiveio/component-witness": "workspace:*",

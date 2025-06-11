@@ -80,12 +80,12 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
       }
 
       .author-avatar {
-        width: 32px;
-        height: 32px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         background: var(--hive-primary);
         display: flex;
@@ -93,51 +93,71 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
         justify-content: center;
         color: white;
         font-weight: 600;
-        font-size: 0.875rem;
+        font-size: 1rem;
+        border: 2px solid var(--hive-border);
+        overflow: hidden;
+      }
+
+      .author-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .post-meta {
         flex: 1;
+        min-width: 0;
       }
 
       .author-name {
         font-weight: 600;
         color: var(--hive-on-surface);
         margin: 0;
-        font-size: 0.875rem;
+        font-size: 0.95rem;
+        line-height: 1.2;
       }
 
       .post-date {
         margin: 0.25rem 0 0 0;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         color: var(--hive-on-surface-variant);
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        line-height: 1.2;
       }
 
       .reputation {
-        background: var(--hive-primary);
+        background: linear-gradient(135deg, var(--hive-primary), color-mix(in srgb, var(--hive-primary) 80%, black));
         color: white;
-        padding: 0.125rem 0.375rem;
-        border-radius: 12px;
-        font-size: 0.625rem;
-        font-weight: 500;
+        padding: 0.15rem 0.45rem;
+        border-radius: 14px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
       .post-title {
-        margin: 0 0 0.5rem 0;
-        font-size: 1rem;
-        font-weight: 600;
+        margin: 0 0 0.75rem 0;
+        font-size: 1.125rem;
+        font-weight: 700;
         color: var(--hive-on-surface);
         line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       .post-preview {
-        margin: 0 0 0.75rem 0;
+        margin: 0 0 1rem 0;
         color: var(--hive-on-surface-variant);
-        line-height: 1.5;
-        font-size: 0.875rem;
+        line-height: 1.6;
+        font-size: 0.9rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       .post-preview img {
@@ -163,22 +183,36 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
 
       .post-stats {
         display: flex;
-        gap: 1rem;
+        gap: 1.25rem;
         align-items: center;
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         color: var(--hive-on-surface-variant);
       }
 
       .stat-item {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: 0.35rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+      }
+
+      .stat-item:hover {
+        color: var(--hive-primary);
+      }
+
+      .stat-item span:first-child {
+        font-size: 1rem;
       }
 
       .post-payout {
-        font-weight: 600;
+        font-weight: 700;
         color: var(--hive-success);
-        font-size: 0.875rem;
+        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        background: color-mix(in srgb, var(--hive-success) 10%, transparent);
+        border-radius: 20px;
+        border: 1px solid color-mix(in srgb, var(--hive-success) 20%, transparent);
       }
 
       .load-more-button {
@@ -195,6 +229,13 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
 
       .load-more-button:hover {
         background: var(--hive-border);
+      }
+
+      .load-more-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
       }
 
       .no-posts {
@@ -309,6 +350,10 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
     return name.substring(0, 2).toUpperCase();
   }
 
+  private getProfileImageUrl(author: string): string {
+    return `https://images.hive.blog/u/${author}/avatar/medium`;
+  }
+
   private getPostUrl(post: HivePost): string {
     if (this.urlTemplate) {
       return this.urlTemplate.replace("{permlink}", post.permlink).replace("{author}", post.author);
@@ -372,7 +417,17 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
                   return html`
                     <article class="post-item" @click=${() => this.handlePostClick(post)}>
                       <div class="post-header">
-                        <div class="author-avatar">${this.getInitials(post.author)}</div>
+                        <div class="author-avatar">
+                          <img
+                            src="${this.getProfileImageUrl(post.author)}"
+                            alt="${post.author}"
+                            @error=${(e: Event) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              target.parentElement!.textContent = this.getInitials(post.author);
+                            }}
+                          />
+                        </div>
                         <div class="post-meta">
                           <h4 class="author-name">@${post.author}</h4>
                           <p class="post-date">
@@ -390,7 +445,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
                         <div class="post-stats">
                           <div class="stat-item">
                             <span>❤️</span>
-                            <span>${post.net_votes}</span>
+                            <span>${post.net_votes || post.active_votes.length}</span>
                           </div>
                           <div class="stat-item">
                             <span>💬</span>

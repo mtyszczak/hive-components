@@ -9,9 +9,8 @@ import {
   parseHiveUrl,
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
-import type { HivePost } from "@hiveio/internal";
+import type { HivePost, HiveComment } from "@hiveio/internal";
 
-@customElement("hive-post-header")
 export class HivePostHeaderElement extends withHiveTheme(LitElement) {
   static styles = [
     baseStyles,
@@ -20,7 +19,6 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
       :host {
         display: block;
         padding: 1rem;
-        border-bottom: 1px solid var(--hive-border);
       }
 
       .author-info {
@@ -31,8 +29,8 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
       }
 
       .author-avatar {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
         background: var(--hive-primary);
         display: flex;
@@ -41,37 +39,48 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
         color: white;
         font-weight: 600;
         font-size: 1rem;
+        border: 2px solid var(--hive-border);
+        overflow: hidden;
+      }
+
+      .author-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .author-details h4 {
         margin: 0;
-        font-size: 1rem;
+        font-size: 0.95rem;
         font-weight: 600;
         color: var(--hive-on-surface);
+        line-height: 1.2;
       }
 
       .author-meta {
-        margin: 0;
-        font-size: 0.75rem;
+        margin: 0.25rem 0 0 0;
+        font-size: 0.8rem;
         color: var(--hive-on-surface-variant);
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        line-height: 1.2;
       }
 
       .reputation {
-        background: var(--hive-primary);
+        background: linear-gradient(135deg, var(--hive-primary), color-mix(in srgb, var(--hive-primary) 80%, black));
         color: white;
-        padding: 0.125rem 0.375rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 500;
+        padding: 0.15rem 0.45rem;
+        border-radius: 14px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
       .post-title {
         margin: 0;
         font-size: 1.25rem;
-        font-weight: 600;
+        font-weight: 700;
         color: var(--hive-on-surface);
         line-height: 1.4;
       }
@@ -95,7 +104,10 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
   permlink = "";
 
   @property({ type: Object })
-  post: HivePost | null = null;
+  post: HivePost | HiveComment | null = null;
+
+  @property({ type: Boolean, reflect: true, attribute: "show-title" })
+  showTitle = true;
 
   @state()
   private loading = false;
@@ -104,7 +116,7 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
   private error = "";
 
   @state()
-  private internalPost: HivePost | null = null;
+  private internalPost: HivePost | HiveComment | null = null;
 
   async connectedCallback() {
     super.connectedCallback();
@@ -146,6 +158,10 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
     return name.substring(0, 2).toUpperCase();
   }
 
+  private getProfileImageUrl(author: string): string {
+    return `https://images.hive.blog/u/${author}/avatar/medium`;
+  }
+
   render() {
     if (this.loading) {
       return html`<div class="loading">Loading post header...</div>`;
@@ -165,7 +181,17 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
 
     return html`
       <div class="author-info">
-        <div class="author-avatar">${this.getInitials(currentPost.author)}</div>
+        <div class="author-avatar">
+          <img
+            src="${this.getProfileImageUrl(currentPost.author)}"
+            alt="${currentPost.author}"
+            @error=${(e: Event) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.parentElement!.textContent = this.getInitials(currentPost.author);
+            }}
+          />
+        </div>
         <div class="author-details">
           <h4>@${currentPost.author}</h4>
           <p class="author-meta">
@@ -175,7 +201,7 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
         </div>
       </div>
 
-      ${currentPost.title ? html` <h2 class="post-title">${currentPost.title}</h2> ` : ""}
+      ${this.showTitle && currentPost.title ? html` <h2 class="post-title">${currentPost.title}</h2> ` : ""}
     `;
   }
 }
@@ -184,4 +210,9 @@ declare global {
   interface HTMLElementTagNameMap {
     "hive-post-header": HivePostHeaderElement;
   }
+}
+
+// Safe registration to prevent duplicate registration errors
+if (!customElements.get("hive-post-header")) {
+  customElements.define("hive-post-header", HivePostHeaderElement);
 }

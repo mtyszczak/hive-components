@@ -4,16 +4,12 @@ import {
   hiveApi,
   baseStyles,
   themeStyles,
-  formatHiveDate,
-  formatHiveCurrency,
-  calculateReputation,
   parseHiveUrl,
-  renderPostContent,
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HiveComment } from "@hiveio/internal";
+import "@hiveio/component-post";
 
-@customElement("hive-comments")
 export class HiveCommentsElement extends withHiveTheme(LitElement) {
   static styles = [
     baseStyles,
@@ -49,107 +45,31 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
       }
 
       .comment {
-        padding: 1rem;
         border-bottom: 1px solid var(--hive-border);
+        background: var(--hive-surface);
+      }
+
+      .comment > hive-post-header {
+        padding-bottom: 0;
+      }
+
+      .comment > hive-post-content {
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+
+      .comment > hive-post-footer {
+        padding-top: 0;
       }
 
       .comment:last-child {
         border-bottom: none;
       }
 
-      .comment-header {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 0.75rem;
-      }
-
-      .comment-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--hive-primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 600;
-        font-size: 0.875rem;
-      }
-
-      .comment-meta {
-        flex: 1;
-      }
-
-      .comment-author {
-        font-weight: 600;
-        color: var(--hive-on-surface);
-        margin: 0;
-        font-size: 0.875rem;
-      }
-
-      .comment-details {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin: 0.25rem 0 0 0;
-        font-size: 0.75rem;
-        color: var(--hive-on-surface-variant);
-      }
-
-      .reputation {
-        background: var(--hive-primary);
-        color: white;
-        padding: 0.125rem 0.375rem;
-        border-radius: 12px;
-        font-size: 0.625rem;
-        font-weight: 500;
-      }
-
-      .comment-body {
-        color: var(--hive-on-surface);
-        line-height: 1.6;
-        margin: 0 0 0.75rem 0;
-        font-size: 0.875rem;
-      }
-
-      .comment-body img {
-        width: auto;
-        max-width: 50%;
-        height: auto;
-        max-height: none;
-        margin-bottom: 10px;
-      }
-
-      .comment-body a {
-        color: var(--hive-primary);
-        text-decoration: none;
-        transition: color 0.2s ease;
-      }
-
-      .comment-footer {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        font-size: 0.75rem;
-        color: var(--hive-on-surface-variant);
-      }
-
-      .comment-stat {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-      }
-
-      .comment-payout {
-        color: var(--hive-success);
-        font-weight: 500;
-      }
-
       .nested-comment {
         margin-left: 2rem;
         border-left: 2px solid var(--hive-border);
-        padding-left: 1rem;
+        background: var(--hive-surface-variant);
       }
 
       .load-more-button {
@@ -190,15 +110,6 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
       @media (max-width: 640px) {
         .nested-comment {
           margin-left: 1rem;
-          padding-left: 0.5rem;
-        }
-
-        .comment-body img {
-          max-width: 100%;
-        }
-
-        .comment {
-          padding: 0.75rem;
         }
       }
     `,
@@ -267,47 +178,28 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
     }
   }
 
-  private getInitials(name: string): string {
-    return name.substring(0, 2).toUpperCase();
-  }
-
   private renderComment(comment: HiveComment, depth = 0) {
     if (depth > this.maxDepth) {
       return html``;
     }
 
-    const reputation = calculateReputation(comment.author_reputation || 0);
-
-    const body = renderPostContent(comment.body);
-
     return html`
       <div class="comment ${depth > 0 ? "nested-comment" : ""}">
-        <div class="comment-header">
-          <div class="comment-avatar">${this.getInitials(comment.author)}</div>
-          <div class="comment-meta">
-            <h4 class="comment-author">@${comment.author}</h4>
-            <p class="comment-details">
-              <span class="reputation">${reputation}</span>
-              <span>${formatHiveDate(comment.created)}</span>
-            </p>
-          </div>
-        </div>
+        <hive-post-header
+          .post=${comment}
+          .showTitle=${false}>
+        </hive-post-header>
 
-        <div class="comment-body" .innerHTML=${body}></div>
+        <hive-post-content
+          .post=${comment}
+          .preview=${false}>
+        </hive-post-content>
 
-        <div class="comment-footer">
-          <div class="comment-stat">
-            <span>❤️</span>
-            <span>${comment.net_votes}</span>
-          </div>
-          <div class="comment-stat">
-            <span>💬</span>
-            <span>${comment.children}</span>
-          </div>
-          <div class="comment-payout">
-            ${formatHiveCurrency(comment.cashout_time === "1969-12-31T23:59:59" ? comment.total_payout_value : comment.pending_payout_value)}
-          </div>
-        </div>
+        <hive-post-footer
+          .post=${comment}
+          .showTags=${false}
+          .showLink=${false}>
+        </hive-post-footer>
       </div>
     `;
   }
@@ -365,4 +257,9 @@ declare global {
   interface HTMLElementTagNameMap {
     "hive-comments": HiveCommentsElement;
   }
+}
+
+// Safe registration to prevent duplicate registration errors
+if (!customElements.get("hive-comments")) {
+  customElements.define("hive-comments", HiveCommentsElement);
 }

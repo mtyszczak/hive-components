@@ -17,6 +17,14 @@ export interface HivePost {
   cashout_time: string;
   vote_rshares: number;
   total_vote_weight: number;
+  active_votes: {
+    voter: string;
+    percent: number;
+    rshares: number;
+    weight: number;
+    reputation: number;
+    time: string;
+  }[];
   url: string;
 }
 

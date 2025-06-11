@@ -123,3 +123,15 @@ export function parseHiveUrl(url: string): { author: string; permlink: string } 
   }
   return null;
 }
+
+/**
+ * Safely register a custom element to prevent duplicate registration errors
+ */
+export function safeDefineCustomElement(
+  name: string,
+  constructor: CustomElementConstructor
+): void {
+  if (!customElements.get(name)) {
+    customElements.define(name, constructor);
+  }
+}

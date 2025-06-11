@@ -9,9 +9,8 @@ import {
   parseHiveUrl,
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
-import type { HivePost } from "@hiveio/internal";
+import type { HivePost, HiveComment } from "@hiveio/internal";
 
-@customElement("hive-post-footer")
 export class HivePostFooterElement extends withHiveTheme(LitElement) {
   static styles = [
     baseStyles,
@@ -23,7 +22,6 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
 
       .post-footer {
         padding: 1rem;
-        border-top: 1px solid var(--hive-border);
         display: flex;
         flex-wrap: wrap;
         gap: 0.75rem;
@@ -33,16 +31,26 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
 
       .post-stats {
         display: flex;
-        gap: 1rem;
+        gap: 1.25rem;
         align-items: center;
       }
 
       .stat-item {
         display: flex;
         align-items: center;
-        gap: 0.25rem;
+        gap: 0.35rem;
         font-size: 0.875rem;
         color: var(--hive-on-surface-variant);
+        font-weight: 500;
+        transition: color 0.2s ease;
+      }
+
+      .stat-item:hover {
+        color: var(--hive-primary);
+      }
+
+      .stat-item span:first-child {
+        font-size: 1rem;
       }
 
       .post-tags {
@@ -74,8 +82,13 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
       }
 
       .payout-value {
-        font-weight: 600;
+        font-weight: 700;
         color: var(--hive-success);
+        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        background: color-mix(in srgb, var(--hive-success) 10%, transparent);
+        border-radius: 20px;
+        border: 1px solid color-mix(in srgb, var(--hive-success) 20%, transparent);
       }
 
       .post-url {
@@ -118,10 +131,16 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
   permlink = "";
 
   @property({ type: Object })
-  post: HivePost | null = null;
+  post: HivePost | HiveComment | null = null;
 
   @property({ type: Boolean, reflect: true, attribute: "show-tags" })
   showTags = true;
+
+  @property({ type: Boolean, reflect: true, attribute: "show-payout" })
+  showPayout = true;
+
+  @property({ type: Boolean, reflect: true, attribute: "show-link" })
+  showLink = true;
 
   @state()
   private loading = false;
@@ -130,7 +149,7 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
   private error = "";
 
   @state()
-  private internalPost: HivePost | null = null;
+  private internalPost: HivePost | HiveComment | null = null;
 
   async connectedCallback() {
     super.connectedCallback();
@@ -189,24 +208,30 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
       <footer class="post-footer">
         <div class="post-stats">
           <div class="stat-item">
-            <span>❤️ ${currentPost.net_votes}</span>
+            <span>❤️</span>
+            <span>${currentPost.net_votes}</span>
           </div>
           <div class="stat-item">
-            <span>💬 ${currentPost.children}</span>
+            <span>💬</span>
+            <span>${currentPost.children}</span>
           </div>
-          <a href="https://hive.blog${currentPost.url}" target="_blank" rel="noopener" class="post-url">
-            View on Hive
-          </a>
+          ${this.showLink ? html`
+            <a href="https://hive.blog${currentPost.url}" target="_blank" rel="noopener" class="post-url">
+              View on Hive
+            </a>
+          ` : ''}
         </div>
 
-        <div class="payout-info">
-          <div class="payout-value">
-            ${formatHiveCurrency(currentPost.cashout_time === "1969-12-31T23:59:59" ? currentPost.total_payout_value : currentPost.pending_payout_value)}
+        ${this.showPayout ? html`
+          <div class="payout-info">
+            <div class="payout-value">
+              ${formatHiveCurrency(currentPost.cashout_time === "1969-12-31T23:59:59" ? currentPost.total_payout_value : currentPost.pending_payout_value)}
+            </div>
+            <div style="font-size: 0.75rem; margin-right: 5px; color: var(--hive-on-surface-variant);">
+              ${currentPost.cashout_time === "1969-12-31T23:59:59" ? 'Paid out' : 'Pending Payout'}
+            </div>
           </div>
-          <div style="font-size: 0.75rem; color: var(--hive-on-surface-variant);">
-            ${currentPost.cashout_time === "1969-12-31T23:59:59" ? 'Paid out' : 'Pending Payout'}
-          </div>
-        </div>
+        ` : ''}
       </footer>
 
       ${this.showTags && tags.length > 0
@@ -224,4 +249,9 @@ declare global {
   interface HTMLElementTagNameMap {
     "hive-post-footer": HivePostFooterElement;
   }
+}
+
+// Safe registration to prevent duplicate registration errors
+if (!customElements.get("hive-post-footer")) {
+  customElements.define("hive-post-footer", HivePostFooterElement);
 }

@@ -9,9 +9,8 @@ import {
   renderPostContent
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
-import type { HivePost } from "@hiveio/internal";
+import type { HivePost, HiveComment } from "@hiveio/internal";
 
-@customElement("hive-post-content")
 export class HivePostContentElement extends withHiveTheme(LitElement) {
   static styles = [
     baseStyles,
@@ -61,7 +60,7 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
   permlink = "";
 
   @property({ type: Object })
-  post: HivePost | null = null;
+  post: HivePost | HiveComment | null = null;
 
   @property({ type: Boolean, reflect: true })
   preview = false;
@@ -76,7 +75,7 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
   private error = "";
 
   @state()
-  private internalPost: HivePost | null = null;
+  private internalPost: HivePost | HiveComment | null = null;
 
   async connectedCallback() {
     super.connectedCallback();
@@ -151,4 +150,9 @@ declare global {
   interface HTMLElementTagNameMap {
     "hive-post-content": HivePostContentElement;
   }
+}
+
+// Safe registration to prevent duplicate registration errors
+if (!customElements.get("hive-post-content")) {
+  customElements.define("hive-post-content", HivePostContentElement);
 }
