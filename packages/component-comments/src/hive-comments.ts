@@ -287,7 +287,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
             <span>${comment.children}</span>
           </div>
           <div class="comment-payout">
-            ${formatHiveCurrency(comment.vote_rshares == 0 ? comment.total_payout_value : comment.pending_payout_value)}
+            ${formatHiveCurrency(comment.cashout_time === "1969-12-31T23:59:59" ? comment.total_payout_value : comment.pending_payout_value)}
           </div>
         </div>
       </div>

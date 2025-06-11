@@ -14,6 +14,7 @@ export interface HivePost {
   pending_payout_value: string;
   total_payout_value: string;
   curator_payout_value: string;
+  cashout_time: string;
   vote_rshares: number;
   total_vote_weight: number;
   url: string;

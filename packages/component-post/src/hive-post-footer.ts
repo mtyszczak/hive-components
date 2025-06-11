@@ -201,10 +201,10 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
 
         <div class="payout-info">
           <div class="payout-value">
-            ${formatHiveCurrency(currentPost.vote_rshares == 0 ? currentPost.total_payout_value : currentPost.pending_payout_value)}
+            ${formatHiveCurrency(currentPost.cashout_time === "1969-12-31T23:59:59" ? currentPost.total_payout_value : currentPost.pending_payout_value)}
           </div>
           <div style="font-size: 0.75rem; color: var(--hive-on-surface-variant);">
-            ${currentPost.vote_rshares == 0 ? 'Paid out' : 'Pending Payout'}
+            ${currentPost.cashout_time === "1969-12-31T23:59:59" ? 'Paid out' : 'Pending Payout'}
           </div>
         </div>
       </footer>

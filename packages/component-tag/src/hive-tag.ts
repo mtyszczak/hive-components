@@ -380,7 +380,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
                           </div>
                         </div>
                         <div class="post-payout">
-                          ${formatHiveCurrency(post.vote_rshares == 0 ? post.total_payout_value : post.pending_payout_value)}
+                          ${formatHiveCurrency(post.cashout_time === "1969-12-31T23:59:59" ? post.total_payout_value : post.pending_payout_value)}
                         </div>
                       </div>
                     </article>
