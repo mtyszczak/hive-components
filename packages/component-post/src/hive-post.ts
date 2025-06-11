@@ -21,7 +21,7 @@ export class HivePostElement extends withHiveTheme(LitElement) {
         display: block;
         border: 1px solid var(--hive-border);
         border-radius: 8px;
-        background: var(--hive-surface);
+        /* background: var(--hive-surface); */
         overflow: hidden;
       }
 

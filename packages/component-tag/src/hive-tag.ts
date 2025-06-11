@@ -21,7 +21,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
       }
 
       .tag-container {
-        background: var(--hive-surface);
+        /* background: var(--hive-surface); */
         border: 1px solid var(--hive-border);
         border-radius: 8px;
         overflow: hidden;

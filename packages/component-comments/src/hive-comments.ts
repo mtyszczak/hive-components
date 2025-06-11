@@ -20,7 +20,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
       }
 
       .comments-container {
-        background: var(--hive-surface);
+        /* background: var(--hive-surface); */
         border: 1px solid var(--hive-border);
         border-radius: 8px;
         overflow: hidden;
@@ -46,7 +46,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
 
       .comment {
         border-bottom: 1px solid var(--hive-border);
-        background: var(--hive-surface);
+        /* background: var(--hive-surface); */
       }
 
       .comment > hive-post-header {
