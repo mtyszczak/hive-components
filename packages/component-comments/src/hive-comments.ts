@@ -122,6 +122,9 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
   @property({ type: Number, reflect: true })
   maxDepth = 3;
 
+  @property({ type: String, reflect: true, attribute: "front-base-url" })
+  frontBaseUrl = "https://hive.blog";
+
   @property({ type: Number, reflect: true })
   initialLimit = 10;
 
@@ -193,11 +196,19 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
 
     return html`
       <div class="comment ${depth > 0 ? "nested-comment" : ""}">
-        <hive-post-header .post=${comment} .theme=${this.theme} .showTitle=${false}> </hive-post-header>
+        <hive-post-header .frontBaseUrl=${this.frontBaseUrl} .post=${comment} .theme=${this.theme} .showTitle=${false}>
+        </hive-post-header>
 
-        <hive-post-content .post=${comment} .theme=${this.theme} .preview=${false}> </hive-post-content>
+        <hive-post-content .frontBaseUrl=${this.frontBaseUrl} .post=${comment} .theme=${this.theme} .preview=${false}>
+        </hive-post-content>
 
-        <hive-post-footer .post=${comment} .theme=${this.theme} .showTags=${false} .showLink=${false}>
+        <hive-post-footer
+          .frontBaseUrl=${this.frontBaseUrl}
+          .post=${comment}
+          .theme=${this.theme}
+          .showTags=${false}
+          .showLink=${false}
+        >
         </hive-post-footer>
       </div>
     `;

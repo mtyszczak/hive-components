@@ -195,6 +195,9 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
   @property({ type: Number, reflect: true, attribute: "preview-length" })
   previewLength = 150;
 
+  @property({ type: String, reflect: true, attribute: "front-base-url" })
+  frontBaseUrl = "https://hive.blog";
+
   private posts: HivePost[] = [];
 
   @state()
@@ -333,6 +336,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
                   const preview = truncateText(
                     renderPostContent(post.body, {
                       breaks: true,
+                      baseUrl: `${this.frontBaseUrl}/`,
                     })
                       .replace(/<[^>]*>/g, "")
                       .replace(/\n/g, " "),
@@ -357,7 +361,13 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
                         </div>
                       </div>
 
-                      <hive-post-footer .post=${post} .theme=${this.theme} .showTags=${false} .showLink=${false}>
+                      <hive-post-footer
+                        .frontBaseUrl=${this.frontBaseUrl}
+                        .post=${post}
+                        .theme=${this.theme}
+                        .showTags=${false}
+                        .showLink=${false}
+                      >
                       </hive-post-footer>
                     </article>
                   `;

@@ -3,12 +3,13 @@ import { DefaultRenderer } from "@hiveio/content-renderer";
 export const renderPostContent = (
   content: string,
   options?: {
+    baseUrl?: string;
     breaks?: boolean;
     doNotShowImages?: boolean;
   }
 ) => {
   const renderer = new DefaultRenderer({
-    baseUrl: "https://hive.blog/",
+    baseUrl: options?.baseUrl ?? "https://hive.blog/",
     breaks: options?.breaks ?? true,
     skipSanitization: false,
     allowInsecureScriptTags: false,

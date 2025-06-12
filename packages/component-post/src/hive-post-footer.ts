@@ -145,6 +145,9 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
   @property({ type: Boolean, reflect: true, attribute: "show-link" })
   showLink = true;
 
+  @property({ type: String, reflect: true, attribute: "front-base-url" })
+  frontBaseUrl = "https://hive.blog";
+
   @state()
   private loading = false;
 
@@ -220,7 +223,7 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
           </div>
           ${this.showLink
             ? html`
-                <a href="https://hive.blog${currentPost.url}" target="_blank" rel="noopener" class="post-url">
+                <a href="${this.frontBaseUrl}${currentPost.url}" target="_blank" rel="noopener" class="post-url">
                   View on Hive
                 </a>
               `

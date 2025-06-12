@@ -57,6 +57,9 @@ export class HivePostElement extends withHiveTheme(LitElement) {
   @property({ type: Number, reflect: true, attribute: "max-length" })
   maxLength = 300;
 
+  @property({ type: String, reflect: true, attribute: "front-base-url" })
+  frontBaseUrl = "https://hive.blog";
+
   private post: HivePost | null = null;
 
   @state()
@@ -118,12 +121,13 @@ export class HivePostElement extends withHiveTheme(LitElement) {
       <article class="post-card">
         <hive-post-header .theme=${this.theme} .post=${this.post}></hive-post-header>
         <hive-post-content
+          .frontBaseUrl=${this.frontBaseUrl}
           .theme=${this.theme}
           .post=${this.post}
           ?preview=${this.preview}
           max-length=${this.maxLength}
         ></hive-post-content>
-        <hive-post-footer .theme=${this.theme} .post=${this.post}></hive-post-footer>
+        <hive-post-footer .frontBaseUrl=${this.frontBaseUrl} .theme=${this.theme} .post=${this.post}></hive-post-footer>
       </article>
     `;
   }

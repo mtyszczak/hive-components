@@ -61,6 +61,9 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
   @property({ type: Number, reflect: true, attribute: "max-length" })
   maxLength = 300;
 
+  @property({ type: String, reflect: true, attribute: "front-base-url" })
+  frontBaseUrl = "https://hive.blog";
+
   @state()
   private loading = false;
 
@@ -113,7 +116,7 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
   }
 
   private renderPostBody(body: string): string {
-    let response = renderPostContent(body);
+    let response = renderPostContent(body, { baseUrl: `${this.frontBaseUrl}/` });
     if (this.preview) {
       response = response.replace(/<[^>]+>/g, "");
       response = truncateText(response, this.maxLength);

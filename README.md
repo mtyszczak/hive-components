@@ -68,6 +68,7 @@ Display a Hive post with author information, content, and metadata.
 - `permlink` - Post permlink in format `@author/permlink` (required)
 - `preview` - Show truncated preview (boolean)
 - `max-length` - Maximum content length for preview mode (default: 300)
+- `front-base-url` - Front base URL to open the links (default: `https://hive.blog`)
 
 **Example:**
 
@@ -92,6 +93,7 @@ Display threaded comments for a Hive post with nested replies.
 - `permlink` - Post permlink in format `@author/permlink` (required)
 - `max-depth` - Maximum nesting depth for replies (default: 3)
 - `initial-limit` - Initial number of comments to show (default: 10)
+- `front-base-url` - Front base URL to open the links (default: `https://hive.blog`)
 
 **Example:**
 
@@ -110,6 +112,7 @@ Display posts from a specific Hive tag with pagination.
 - `posts-per-page` - Number of posts per page (default: 10)
 - `url-template` - URL template for post links, use `{permlink}` and `{author}` placeholders
 - `preview-length` - Length of post preview text (default: 150)
+- `front-base-url` - Front base URL to open the links (default: `https://hive.blog`)
 
 **Events:**
 
