@@ -18,7 +18,7 @@
   "scripts": {
     "prebuild": "ls-engines && husky",
     "build": "pnpm -r run build",
-    "postbuild": "tsc && vite build",
+    "postbuild": "vite build",
     "lint": "eslint . --fix --ext .ts",
     "lint:ci": "eslint . --max-warnings 0 --ext .ts",
     "clean": "pnpm -r run clean && rm -rf node_modules dist tsconfig.tsbuildinfo",
@@ -42,6 +42,7 @@
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.34.0",
     "vite": "^5.0.0",
+    "vite-plugin-dts": "^4.5.4",
     "vitest": "^1.0.0"
   },
   "dependencies": {

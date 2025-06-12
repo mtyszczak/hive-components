@@ -1,1 +1,1 @@
-../../packages/component-witness/dist/bundle.js
+../../packages/component-witness/dist/index.js

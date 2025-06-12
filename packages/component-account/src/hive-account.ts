@@ -9,7 +9,7 @@ import {
   calculateReputation,
   isValidHiveAccount,
 } from "@hiveio/internal";
-import { withHiveTheme } from "@hiveio/internal/decorators";
+import { withHiveTheme } from "@hiveio/internal";
 import type { HiveAccount } from "@hiveio/internal";
 
 @customElement("hive-account")

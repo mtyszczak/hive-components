@@ -1,1 +1,1 @@
-../../packages/internal/dist/bundle.js
+../../packages/internal/dist/index.js

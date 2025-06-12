@@ -1,7 +1,7 @@
 import { LitElement, html, css } from "lit";
 import { property, state } from "lit/decorators.js";
 import { baseStyles, themeStyles, formatHiveDate, calculateReputation, hiveApi, parseHiveUrl } from "@hiveio/internal";
-import { withHiveTheme } from "@hiveio/internal/decorators";
+import { withHiveTheme } from "@hiveio/internal";
 import type { HivePost, HiveComment } from "@hiveio/internal";
 
 export class HivePostHeaderElement extends withHiveTheme(LitElement) {

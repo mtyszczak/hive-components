@@ -9,22 +9,13 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    },
-    "./decorators": {
-      "types": "./dist/decorators.d.ts",
-      "default": "./dist/decorators.js"
-    },
-    "./hive-api": {
-      "types": "./dist/hive-api.d.ts",
-      "default": "./dist/hive-api.js"
-    },
-    "./styles": {
-      "types": "./dist/styles.d.ts",
-      "default": "./dist/styles.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {

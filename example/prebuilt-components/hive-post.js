@@ -1,1 +1,1 @@
-../../packages/component-post/dist/bundle.js
+../../packages/component-post/dist/index.js

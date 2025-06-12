@@ -11,8 +11,11 @@
       "default": "./dist/index.js"
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "vite build",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {
