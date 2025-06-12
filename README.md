@@ -12,16 +12,16 @@ A collection of reusable Web Components for the Hive blockchain, built with Type
   {
     "imports": {
       "lit": "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js",
-      "@hiveio/internal": "http://localhost:8080/example/prebuilt-components/hive-internal.js"
+      "@hiveio/internal": "https://gtg.openhive.network/5bb236/hive-internal.js"
     }
   }
 </script>
 
 <!-- Import components we want -->
-<script type="module" src="http://localhost:8080/example/prebuilt-components/hive-post.js"></script>
-<script type="module" src="http://localhost:8080/example/prebuilt-components/hive-witness.js"></script>
-<script type="module" src="http://localhost:8080/example/prebuilt-components/hive-comments.js"></script>
-<script type="module" src="http://localhost:8080/example/prebuilt-components/hive-tag.js"></script>
+<script type="module" src="https://gtg.openhive.network/5bb236/hive-post.js"></script>
+<script type="module" src="https://gtg.openhive.network/5bb236/hive-witness.js"></script>
+<script type="module" src="https://gtg.openhive.network/5bb236/hive-comments.js"></script>
+<script type="module" src="https://gtg.openhive.network/5bb236/hive-tag.js"></script>
 
 <!-- Use the components -->
 <hive-witness account="gtg"></hive-witness>
