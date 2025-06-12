@@ -14,7 +14,7 @@ A collection of reusable Web Components for the Hive blockchain, built with Type
 <hive-witness theme="light" account="gtg" />
 <hive-post theme="light" permlink="@gtg/hello-world" />
 <hive-comments theme="light" permlink="@gtg/hello-world" />
-<hive-tag theme="light" tag="biography" posts-per-page="4" url-template="/biography/{permlink}" />
+<hive-tag theme="light" tag="photography" posts-per-page="4" url-template="/photography/{permlink}" />
 ```
 
 ### NPM Installation

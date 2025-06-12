@@ -25,7 +25,6 @@
   },
   "scripts": {
     "build": "tsc && vite build",
-    "dist": "cp dist/bundle.js ../../example/prebuilt-components/hive-internal.js",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {
