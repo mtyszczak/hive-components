@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "tsc && vite build",
+    "dist": "cp dist/bundle.js ../../example/prebuilt-components/hive-account.js",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {

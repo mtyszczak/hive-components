@@ -50,7 +50,7 @@ const tt = (i) => new Z(typeof i == "string" ? i : i + "", void 0, V), et = (i, 
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */
-const { is: rt, defineProperty: it, getOwnPropertyDescriptor: ot, getOwnPropertyNames: st, getOwnPropertySymbols: at, getPrototypeOf: nt } = Object, g = globalThis, W = g.trustedTypes, lt = W ? W.emptyScript : "", R = g.reactiveElementPolyfillSupport, P = (i, t) => i, T = { toAttribute(i, t) {
+const { is: rt, defineProperty: it, getOwnPropertyDescriptor: ot, getOwnPropertyNames: st, getOwnPropertySymbols: at, getPrototypeOf: nt } = Object, m = globalThis, W = m.trustedTypes, lt = W ? W.emptyScript : "", R = m.reactiveElementPolyfillSupport, P = (i, t) => i, T = { toAttribute(i, t) {
   switch (t) {
     case Boolean:
       i = i ? lt : null;
@@ -79,7 +79,7 @@ const { is: rt, defineProperty: it, getOwnPropertyDescriptor: ot, getOwnProperty
   }
   return e;
 } }, A = (i, t) => !rt(i, t), F = { attribute: !0, type: String, converter: T, reflect: !1, useDefault: !1, hasChanged: A };
-Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), g.litPropertyMetadata ?? (g.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
+Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), m.litPropertyMetadata ?? (m.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
 class x extends HTMLElement {
   static addInitializer(t) {
     this._$Ei(), (this.l ?? (this.l = [])).push(t);
@@ -281,7 +281,7 @@ class x extends HTMLElement {
   firstUpdated(t) {
   }
 }
-x.elementStyles = [], x.shadowRootOptions = { mode: "open" }, x[P("elementProperties")] = /* @__PURE__ */ new Map(), x[P("finalized")] = /* @__PURE__ */ new Map(), R == null || R({ ReactiveElement: x }), (g.reactiveElementVersions ?? (g.reactiveElementVersions = [])).push("2.1.0");
+x.elementStyles = [], x.shadowRootOptions = { mode: "open" }, x[P("elementProperties")] = /* @__PURE__ */ new Map(), x[P("finalized")] = /* @__PURE__ */ new Map(), R == null || R({ ReactiveElement: x }), (m.reactiveElementVersions ?? (m.reactiveElementVersions = [])).push("2.1.0");
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -937,23 +937,23 @@ B.styles = [
       }
     `
 ];
-let m = B;
+let g = B;
 U([
   h({ type: String, reflect: !0 })
-], m.prototype, "permlink", void 0);
+], g.prototype, "permlink", void 0);
 U([
   h({ type: Boolean, reflect: !0 })
-], m.prototype, "preview", void 0);
+], g.prototype, "preview", void 0);
 U([
   h({ type: Number, reflect: !0, attribute: "max-length" })
-], m.prototype, "maxLength", void 0);
+], g.prototype, "maxLength", void 0);
 U([
   p()
-], m.prototype, "loading", void 0);
+], g.prototype, "loading", void 0);
 U([
   p()
-], m.prototype, "error", void 0);
-customElements.get("hive-post") || customElements.define("hive-post", m);
+], g.prototype, "error", void 0);
+customElements.get("hive-post") || customElements.define("hive-post", g);
 var ut = Object.defineProperty, ft = Object.getOwnPropertyDescriptor, b = (i, t, e, r) => {
   for (var o = r > 1 ? void 0 : r ? ft(t, e) : t, s = i.length - 1, a; s >= 0; s--)
     (a = i[s]) && (o = (r ? a(t, e, o) : a(o)) || o);
@@ -1029,7 +1029,6 @@ let u = class extends C(k) {
       const t = K(J(i.body, {
         breaks: !0
       }).replace(/<[^>]*>/g, "").replace(/\n/g, " "), this.previewLength);
-      console.log(t);
       let e = "";
       try {
         e = (o = (r = JSON.parse(i.json_metadata)) == null ? void 0 : r.image) == null ? void 0 : o[0];

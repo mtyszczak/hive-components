@@ -15,6 +15,7 @@
     "lint": "eslint . --ext .ts",
     "clean": "pnpm -r run clean && rm -rf node_modules",
     "catalog": "pnpm --filter catalog dev",
+    "dist": "pnpm -r run dist",
     "format": "prettier --write ."
   },
   "devDependencies": {
