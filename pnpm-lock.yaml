@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@hiveio/component-account':
+        specifier: workspace:*
+        version: link:packages/component-account
       '@hiveio/component-comments':
         specifier: workspace:*
         version: link:packages/component-comments
@@ -81,6 +84,22 @@ importers:
       '@hiveio/internal':
         specifier: workspace:*
         version: link:../packages/internal
+      lit:
+        specifier: ^3.0.0
+        version: 3.3.0
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.8.3
+      vite:
+        specifier: ^5.0.0
+        version: 5.4.19(@types/node@20.19.0)(terser@5.42.0)
+
+  packages/component-account:
+    dependencies:
+      '@hiveio/internal':
+        specifier: workspace:*
+        version: link:../internal
       lit:
         specifier: ^3.0.0
         version: 3.3.0

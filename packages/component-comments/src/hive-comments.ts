@@ -255,7 +255,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
     return html`
       <div class="comments-container">
         <div class="comments-header">
-          <h3 class="comments-title">Comments (${this.comments.length})</h3>
+          <h3 class="comments-title">Comments (${this.allComments.length})</h3>
         </div>
 
         ${this.comments.length === 0

@@ -203,6 +203,22 @@
           </div>
         </div>
       </div>
+<!--
+      <div class="section">
+        <div class="section-header">
+          <h2>👤 Hive Account Component</h2>
+        </div>
+        <div class="section-content">
+          <div class="component-demo">
+            <h3 class="demo-title">Account Profile Display</h3>
+            <p class="demo-description">
+              Display comprehensive information about a Hive account including reputation, balances, and statistics.
+            </p>
+            <div class="code-block">&lt;hive-account theme="light" account="gtg"&gt;&lt;/hive-account&gt;</div>
+            <hive-account theme="light" account="gtg"></hive-account>
+          </div>
+        </div>
+      </div> -->
 
       <div class="section">
         <div class="section-header">
@@ -283,6 +299,7 @@
               &lt;!-- Include the components script --&gt;<br>&lt;script
               src="https://openhive.network/dev/hive-components.js" type="module"&gt;&lt;/script&gt;<br><br>&lt;!-- Use the
               components --&gt;<br>&lt;hive-witness theme="light" account="gtg" /&gt;<br>
+              &lt;hive-account theme="light" account="gtg" /&gt;<br>
               &lt;hive-post theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br>
               &lt;hive-comments theme="light" permlink="@gtg/hello-world" /&gt;<br>&lt;hive-tag theme="light"
               tag="biography" posts-per-page="4" url-template="/biography/{permlink}" /&gt;
@@ -295,13 +312,14 @@
     <script type="module">
       // Import all components
       import "../packages/component-witness/dist/bundle.js";
+      import "../packages/component-account/dist/bundle.js";
       import "../packages/component-post/dist/bundle.js";
       import "../packages/component-comments/dist/bundle.js";
       import "../packages/component-tag/dist/bundle.js";
 
       // Theme switching functionality
       const themeButtons = document.querySelectorAll(".theme-button");
-      const components = document.querySelectorAll("hive-witness, hive-post, hive-comments, hive-tag");
+      const components = document.querySelectorAll("hive-witness, hive-account, hive-post, hive-comments, hive-tag");
 
       themeButtons.forEach(button => {
         button.addEventListener("click", () => {

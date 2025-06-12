@@ -1,4 +1,4 @@
-import type { HivePost, HiveWitness, HiveComment, HiveTag } from "./types.js";
+import type { HivePost, HiveWitness, HiveComment, HiveTag, HiveAccount } from "./types.js";
 
 const DEFAULT_API_ENDPOINTS = [
   "https://api.hive.blog",
@@ -15,7 +15,7 @@ export class HiveApiClient {
     this.endpoints = endpoints;
   }
 
-  private async makeRequest<T>(method: string, params: unknown[]): Promise<T> {
+  private async makeRequest<T>(method: string, params: unknown): Promise<T> {
     const payload = {
       jsonrpc: "2.0",
       method,
@@ -70,6 +70,15 @@ export class HiveApiClient {
 
   async getWitnessByAccount(account: string): Promise<HiveWitness> {
     return this.makeRequest("condenser_api.get_witness_by_account", [account]);
+  }
+
+  async getAccounts(accounts: string[]): Promise<HiveAccount[]> {
+    return this.makeRequest("condenser_api.get_accounts", [accounts]);
+  }
+
+  async getAccount(account: string): Promise<HiveAccount | null> {
+    const accounts = await this.getAccounts([account]);
+    return accounts.length > 0 ? accounts[0] || null : null;
   }
 
   async getDiscussionsByTag(tag: string, limit = 20, start_author?: string, start_permlink?: string): Promise<HivePost[]> {

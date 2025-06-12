@@ -327,7 +327,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
         <div class="tag-header">
           <h2 class="tag-title">
             <span class="tag-badge">#${this.tag}</span>
-            <span>${this.posts.length} post${this.posts.length !== 1 ? "s" : ""}</span>
+            <!-- <span>${this.posts.length} post${this.posts.length !== 1 ? "s" : ""} loaded</span> -->
           </h2>
         </div>
 

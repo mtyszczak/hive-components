@@ -33,6 +33,7 @@
     "vitest": "^1.0.0"
   },
   "dependencies": {
+    "@hiveio/component-account": "workspace:*",
     "@hiveio/component-comments": "workspace:*",
     "@hiveio/component-post": "workspace:*",
     "@hiveio/component-tag": "workspace:*",
