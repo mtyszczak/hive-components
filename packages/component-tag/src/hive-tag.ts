@@ -146,6 +146,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
       .post-content {
         padding: 1rem;
         display: flex;
+        flex-direction: row;
         gap: 1rem;
       }
       .post-excerpt {
@@ -178,6 +179,9 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
       @media (max-width: 640px) {
         .post-preview img {
           max-width: 100%;
+        }
+        .post-content {
+          flex-direction: column;
         }
       }
     `,

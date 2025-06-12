@@ -80,6 +80,7 @@ export class HiveWitnessElement extends withHiveTheme(LitElement) {
       .stat-value {
         font-size: 1.125rem;
         font-weight: 600;
+        word-break: break-all;
         color: var(--hive-on-surface);
         margin: 0;
       }
