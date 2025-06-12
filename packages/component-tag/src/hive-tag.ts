@@ -211,9 +211,6 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
   @state()
   private hasMore = true;
 
-  @state()
-  private allPosts: HivePost[] = [];
-
   async connectedCallback() {
     super.connectedCallback();
     if (this.tag) {
@@ -224,7 +221,6 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
   async updated(changedProperties: Map<string, unknown>) {
     if (changedProperties.has("tag") && this.tag) {
       this.posts = [];
-      this.allPosts = [];
       await this.loadPosts();
     }
   }
@@ -239,16 +235,17 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
     if (!append) {
       this.error = "";
       this.posts = [];
-      this.allPosts = [];
     }
 
     try {
       // For pagination, we need start_author and start_permlink from the last post
       let start_author: string | undefined;
       let start_permlink: string | undefined;
-      
-      if (append && this.allPosts.length > 0) {
-        const lastPost = this.allPosts[this.allPosts.length - 1];
+
+      const postsLength = this.posts.length || 0;
+
+      if (append && postsLength > 0) {
+        const lastPost = this.posts[postsLength - 1];
         if (lastPost) {
           start_author = lastPost.author;
           start_permlink = lastPost.permlink;
@@ -257,29 +254,17 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
 
       // Request one extra post to check if there are more available
       const requestLimit = this.postsPerPage + 1;
-      
+
       const newPosts = await hiveApi.getDiscussionsByTag(this.tag, requestLimit, start_author, start_permlink);
 
-      // If we have a start_author/start_permlink, the first result will be a duplicate
-      let postsToAdd = newPosts;
-      if (append && start_author && start_permlink && newPosts.length > 0) {
-        postsToAdd = newPosts.slice(1); // Remove the first duplicate post
-      }
-
-      // Check if there are more posts (if we got more than requested)
-      this.hasMore = postsToAdd.length > this.postsPerPage;
-      
-      // Only take the requested number of posts
-      if (postsToAdd.length > this.postsPerPage) {
-        postsToAdd = postsToAdd.slice(0, this.postsPerPage);
-      }
+      // Update hasMore based on whether we got extra posts
+      this.hasMore = newPosts.length >= this.postsPerPage;
+      const posts = newPosts.slice(0, this.postsPerPage);
 
       if (append) {
-        this.allPosts = [...this.allPosts, ...postsToAdd];
-        this.posts = [...this.posts, ...postsToAdd];
+        this.posts = [...this.posts, ...posts];
       } else {
-        this.allPosts = postsToAdd;
-        this.posts = postsToAdd;
+        this.posts = posts;
       }
 
     } catch (err) {

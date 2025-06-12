@@ -40,7 +40,6 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
       }
 
       .comments-list {
-        max-height: 600px;
         overflow-y: auto;
       }
 
@@ -181,7 +180,7 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
 
       // Store all comments for pagination
       this.allComments = sortedComments;
-      
+
       // Show initial batch
       this.comments = sortedComments.slice(0, this.initialLimit);
       this.hasMore = sortedComments.length > this.initialLimit;
