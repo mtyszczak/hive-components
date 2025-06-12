@@ -1,0 +1,4 @@
+{
+  "*.{ts,js}": "pnpm lint:ci",
+  "*.{ts,js,json,css,md,html}": "pnpm format:ci"
+}

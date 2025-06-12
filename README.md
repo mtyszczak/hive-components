@@ -7,14 +7,27 @@ A collection of reusable Web Components for the Hive blockchain, built with Type
 ### CDN Usage
 
 ```html
-<!-- Include the components bundle -->
-<script src="https://openhive.network/dev/hive-components.js" type="module"></script>
+<!-- Prepare imports for our components -->
+<script type="importmap">
+  {
+    "imports": {
+      "lit": "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js",
+      "@hiveio/internal": "http://localhost:8080/example/prebuilt-components/hive-internal.js"
+    }
+  }
+</script>
+
+<!-- Import components we want -->
+<script type="module" src="http://localhost:8080/example/prebuilt-components/hive-post.js"></script>
+<script type="module" src="http://localhost:8080/example/prebuilt-components/hive-witness.js"></script>
+<script type="module" src="http://localhost:8080/example/prebuilt-components/hive-comments.js"></script>
+<script type="module" src="http://localhost:8080/example/prebuilt-components/hive-tag.js"></script>
 
 <!-- Use the components -->
-<hive-witness theme="light" account="gtg" />
-<hive-post theme="light" permlink="@gtg/hello-world" />
-<hive-comments theme="light" permlink="@gtg/hello-world" />
-<hive-tag theme="light" tag="photography" posts-per-page="4" url-template="/photography/{permlink}" />
+<hive-witness account="gtg"></hive-witness>
+<hive-post permlink="@gtg/hello-world"></hive-post>
+<hive-comments permlink="@gtg/hello-world"></hive-comments>
+<hive-tag tag="photography" posts-per-page="4" url-template="/photography/{permlink}"></hive-tag>
 ```
 
 ### NPM Installation
@@ -24,7 +37,7 @@ npm install @hiveio/components
 ```
 
 ```javascript
-import "@hiveio/components/all.js";
+import "@hiveio/components";
 // Components are now available globally
 ```
 
@@ -62,22 +75,6 @@ Display a Hive post with author information, content, and metadata.
 <hive-post theme="light" permlink="@gtg/hello-world"></hive-post>
 <hive-post theme="light" permlink="@gtg/hello-world" preview max-length="150"></hive-post>
 ```
-
-### `<hive-controls>`
-
-Interactive controls for Hive posts including voting, commenting, reblogging, and sharing.
-
-**Attributes:**
-
-- `theme` - Theme mode: `light`, `dark`, or `auto`
-- `permlink` - Post permlink in format `@author/permlink` (required)
-- `readonly` - Disable interactive features (boolean)
-
-**Events:**
-
-- `hive-vote` - Fired when vote button is clicked
-- `hive-comment` - Fired when comment button is clicked
-- `hive-reblog` - Fired when reblog button is clicked
 
 **Example:**
 
@@ -147,21 +144,18 @@ hive-witness {
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm 9+
+- Node.js >= 20
+- pnpm 9.0.0
 
 ### Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/hive-components.git
+git clone https://github.com/mtyszczak/hive-components.git
 cd hive-components
 
 # Install dependencies
 pnpm install
-
-# Start development server
-pnpm catalog
 ```
 
 ### Project Structure
@@ -170,12 +164,9 @@ pnpm catalog
 hive-components/
 ├── packages/
 │   ├── internal/           # Shared utilities and types
-│   ├── component-witness/  # Witness component
-│   ├── component-post/     # Post component
-│   ├── component-controls/ # Controls component
-│   ├── component-comments/ # Comments component
-│   └── component-tag/      # Tag posts component
+│   ├── component-xxx/      # Specific component implementation
 ├── catalog/                # Development catalog
+├── example/                # Example showing basic Hive components usage
 ├── all.ts                  # Main bundle entry
 └── package.json            # Root package.json
 ```
@@ -206,14 +197,6 @@ pnpm format
 pnpm catalog
 ```
 
-## 🔧 Architecture
-
-This project follows the principles of:
-
-- **KISS (Keep It Simple, Stupid)** - Simple, focused components
-- **DRY (Don't Repeat Yourself)** - Shared utilities and styles
-- **SOLID** - Well-structured, maintainable code
-
 ### Key Features
 
 - **TypeScript** - Full type safety
@@ -227,13 +210,12 @@ This project follows the principles of:
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
+2. Create a feature branch: `git checkout -b my-feature`
 3. Make your changes
-4. Add tests if applicable
-5. Run `pnpm lint` and `pnpm format`
-6. Commit your changes: `git commit -am 'Add my feature'`
-7. Push to the branch: `git push origin feature/my-feature`
-8. Create a Pull Request
+4. Build the project to test for errors
+5. Commit your changes: `git commit -am 'Add my feature'` (pre-commit hook will automatically run linters and prettiers if applicable)
+6. Push to the branch: `git push origin my-feature`
+7. Create a Pull Request
 
 ## 📝 License
 

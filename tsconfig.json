@@ -9,6 +9,7 @@
     "declarationMap": false,
     "sourceMap": false,
     "baseUrl": ".",
+    "outDir": "dist",
     "strict": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
@@ -25,5 +26,6 @@
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true
   },
+  "include": ["all.ts"],
   "exclude": ["catalog", "node_modules"]
 }

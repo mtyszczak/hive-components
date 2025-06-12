@@ -4,6 +4,11 @@
   "description": "Hive blockchain reusable Web Components library",
   "private": true,
   "type": "module",
+  "main": "dist/bundle.js",
+  "files": [
+    "dist",
+    "packages/*/dist/bundle.js"
+  ],
   "workspaces": [
     "packages/*",
     "catalog",
@@ -11,11 +16,15 @@
   ],
   "packageManager": "pnpm@9.0.0",
   "scripts": {
+    "prebuild": "ls-engines && husky",
     "build": "pnpm -r run build",
-    "lint": "eslint . --ext .ts",
-    "clean": "pnpm -r run clean && rm -rf node_modules",
+    "postbuild": "tsc && vite build",
+    "lint": "eslint . --fix --ext .ts",
+    "lint:ci": "eslint . --max-warnings 0 --ext .ts",
+    "clean": "pnpm -r run clean && rm -rf node_modules dist tsconfig.tsbuildinfo",
     "catalog": "pnpm --filter catalog dev",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:ci": "prettier --check ."
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
@@ -25,6 +34,9 @@
     "@types/node": "^20.0.0",
     "eslint": "^9.28.0",
     "globals": "^16.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0",
+    "ls-engines": "^0.9.3",
     "prettier": "^3.0.0",
     "rollup": "^4.0.0",
     "typescript": "^5.0.0",
@@ -56,5 +68,8 @@
   "bugs": {
     "url": "https://github.com/mtyszczak/hive-components/issues"
   },
-  "homepage": "https://hive.io/"
+  "homepage": "https://hive.io/",
+  "engines": {
+    "node": ">= 20"
+  }
 }
