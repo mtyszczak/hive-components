@@ -83,6 +83,62 @@ Display a Hive post with author information, content, and metadata.
 <hive-controls theme="light" permlink="@gtg/hello-world"></hive-controls>
 ```
 
+### `<hive-post-header>`
+
+Display the header section of a Hive post including author information, avatar, reputation, and optional title.
+
+**Attributes:**
+
+- `theme` - Theme mode: `light`, `dark`, or `auto`
+- `permlink` - Post permlink in format `@author/permlink` (required if `post` is not provided)
+- `show-title` - Whether to show the post title (boolean, default: true)
+
+**Example:**
+
+```html
+<hive-post-header theme="light" permlink="@gtg/hello-world"></hive-post-header>
+<hive-post-header theme="light" permlink="@gtg/hello-world" show-title="false"></hive-post-header>
+```
+
+### `<hive-post-content>`
+
+Display the content/body of a Hive post with support for preview mode and content truncation.
+
+**Attributes:**
+
+- `theme` - Theme mode: `light`, `dark`, or `auto`
+- `permlink` - Post permlink in format `@author/permlink` (required if `post` is not provided)
+- `preview` - Show truncated preview without HTML formatting (boolean, default: false)
+- `max-length` - Maximum content length for preview mode (default: 300)
+- `front-base-url` - Front base URL for links in content (default: `https://hive.blog`)
+
+**Example:**
+
+```html
+<hive-post-content theme="light" permlink="@gtg/hello-world"></hive-post-content>
+<hive-post-content theme="light" permlink="@gtg/hello-world" preview max-length="150"></hive-post-content>
+```
+
+### `<hive-post-footer>`
+
+Display the footer section of a Hive post including voting stats, comments count, payout information, and tags.
+
+**Attributes:**
+
+- `theme` - Theme mode: `light`, `dark`, or `auto`
+- `permlink` - Post permlink in format `@author/permlink` (required if `post` is not provided)
+- `show-tags` - Whether to show post tags (boolean, default: true)
+- `show-payout` - Whether to show payout information (boolean, default: true)
+- `show-link` - Whether to show "View on Hive" link (boolean, default: true)
+- `front-base-url` - Front base URL for the "View on Hive" link (default: `https://hive.blog`)
+
+**Example:**
+
+```html
+<hive-post-footer theme="light" permlink="@gtg/hello-world"></hive-post-footer>
+<hive-post-footer theme="light" permlink="@gtg/hello-world" show-tags="false" show-payout="false"></hive-post-footer>
+```
+
 ### `<hive-comments>`
 
 Display threaded comments for a Hive post with nested replies.
