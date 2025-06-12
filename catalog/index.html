@@ -296,13 +296,27 @@
             <h3 class="demo-title">Complete Integration Example</h3>
             <p class="demo-description">Here's how you would typically use these components together:</p>
             <div class="code-block">
-              &lt;!-- Include the components script --&gt;<br>&lt;script
-              src="https://openhive.network/dev/hive-components.js" type="module"&gt;&lt;/script&gt;<br><br>&lt;!-- Use the
-              components --&gt;<br>&lt;hive-witness theme="light" account="gtg" /&gt;<br>
-              &lt;hive-account theme="light" account="gtg" /&gt;<br>
-              &lt;hive-post theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br>
-              &lt;hive-comments theme="light" permlink="@gtg/hello-world" /&gt;<br>&lt;hive-tag theme="light"
-              tag="biography" posts-per-page="4" url-template="/biography/{permlink}" /&gt;
+              &lt;!-- Prepare imports for our components --&gt;<br>
+              &lt;script type="importmap"&gt;<br>
+              &nbsp;&nbsp;{<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;"imports": {<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"lit": "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js",<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"@hiveio/internal": "http://localhost:8080/example/prebuilt-components/internals.js"<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+              &nbsp;&nbsp;}<br>
+              &lt;/script&gt;<br><br>
+
+              &lt;!-- Import components we want --&gt;<br>
+              &lt;script type="module" src="http://localhost:8080/example/prebuilt-components/hive-post.js"&gt;&lt;/script&gt;<br>
+              &lt;script type="module" src="http://localhost:8080/example/prebuilt-components/hive-witness.js"&gt;&lt;/script&gt;<br>
+              &lt;script type="module" src="http://localhost:8080/example/prebuilt-components/hive-comments.js"&gt;&lt;/script&gt;<br>
+              &lt;script type="module" src="http://localhost:8080/example/prebuilt-components/hive-tag.js"&gt;&lt;/script&gt;<br><br>
+
+              &lt;!-- Use the components --&gt;<br>
+              &lt;hive-witness account="gtg"&gt;&lt;/hive-witness&gt;<br>
+              &lt;hive-post permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br>
+              &lt;hive-comments permlink="@gtg/hello-world"&gt;&lt;/hive-comments&gt;<br>
+              &lt;hive-tag tag="biography" posts-per-page="4" url-template="/biography/{permlink}"&gt;&lt;/hive-tag&gt;<br>
             </div>
           </div>
         </div>

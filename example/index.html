@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hive Example</title>
+  <style>
+    body > * {
+      margin: 1rem;
+    }
+  </style>
+
+  <!-- Prepare imports for our components -->
+  <script type="importmap">
+    {
+      "imports": {
+        "lit": "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js",
+        "@hiveio/internal": "http://localhost:8080/example/prebuilt-components/internals.js"
+      }
+    }
+  </script>
+  <!-- Import components we want -->
+  <script type="module" src="http://localhost:8080/example/prebuilt-components/hive-post.js"></script>
+  <script type="module" src="http://localhost:8080/example/prebuilt-components/hive-witness.js"></script>
+  <script type="module" src="http://localhost:8080/example/prebuilt-components/hive-comments.js"></script>
+  <script type="module" src="http://localhost:8080/example/prebuilt-components/hive-tag.js"></script>
+</head>
+<body>
+              <!-- Use the components -->
+  <hive-witness account="gtg"></hive-witness>
+  <hive-post permlink="@gtg/hello-world"></hive-post>
+  <hive-comments permlink="@gtg/hello-world"></hive-comments>
+  <hive-tag tag="biography" posts-per-page="4" url-template="/biography/{permlink}"></hive-tag>
+</body>
+</html>

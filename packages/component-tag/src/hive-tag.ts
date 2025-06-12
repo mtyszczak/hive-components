@@ -340,8 +340,6 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
                     breaks: true
                   }).replace(/<[^>]*>/g, "").replace(/\n/g, " "), this.previewLength);
 
-                  console.log(preview);
-
                   let imageUrl = "";
                   try {
                     imageUrl = JSON.parse(post.json_metadata)?.image?.[0];
