@@ -6,7 +6,7 @@ import globals from "globals";
 
 export default tseslint.config(
   {
-    ignores: ["**/dist/**", "**/node_modules/**"]
+    ignores: ["catalog", "example", "**/dist/**", "**/node_modules/**"],
   },
   {
     languageOptions: {

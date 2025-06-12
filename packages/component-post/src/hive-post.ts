@@ -1,11 +1,6 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import {
-  hiveApi,
-  baseStyles,
-  themeStyles,
-  parseHiveUrl,
-} from "@hiveio/internal";
+import { property, state } from "lit/decorators.js";
+import { hiveApi, baseStyles, themeStyles, parseHiveUrl } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HivePost } from "@hiveio/internal";
 import "./hive-post-header.js";
@@ -122,7 +117,12 @@ export class HivePostElement extends withHiveTheme(LitElement) {
     return html`
       <article class="post-card">
         <hive-post-header .theme=${this.theme} .post=${this.post}></hive-post-header>
-        <hive-post-content .theme=${this.theme} .post=${this.post} ?preview=${this.preview} max-length=${this.maxLength}></hive-post-content>
+        <hive-post-content
+          .theme=${this.theme}
+          .post=${this.post}
+          ?preview=${this.preview}
+          max-length=${this.maxLength}
+        ></hive-post-content>
         <hive-post-footer .theme=${this.theme} .post=${this.post}></hive-post-footer>
       </article>
     `;

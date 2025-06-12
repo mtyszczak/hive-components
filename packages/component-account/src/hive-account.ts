@@ -266,8 +266,8 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
               alt="${account.name}"
               @error=${(e: Event) => {
                 const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                target.parentElement!.textContent = this.getInitials(account.name);
+                target.style.display = "none";
+                if (target.parentElement) target.parentElement.textContent = this.getInitials(account.name);
               }}
             />
           </div>
@@ -327,12 +327,14 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
             <span class="meta-label">Witnesses Voted:</span>
             <span class="meta-value">${account.witnesses_voted_for}/30</span>
           </div>
-          ${account.proxy ? html`
-            <div class="meta-item">
-              <span class="meta-label">Proxy:</span>
-              <span class="meta-value">${account.proxy}</span>
-            </div>
-          ` : ''}
+          ${account.proxy
+            ? html`
+                <div class="meta-item">
+                  <span class="meta-label">Proxy:</span>
+                  <span class="meta-value">${account.proxy}</span>
+                </div>
+              `
+            : ""}
         </div>
       </div>
     `;

@@ -1,13 +1,6 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import {
-  baseStyles,
-  themeStyles,
-  formatHiveCurrency,
-  extractTags,
-  hiveApi,
-  parseHiveUrl,
-} from "@hiveio/internal";
+import { property, state } from "lit/decorators.js";
+import { baseStyles, themeStyles, formatHiveCurrency, extractTags, hiveApi, parseHiveUrl } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HivePost, HiveComment } from "@hiveio/internal";
 
@@ -225,28 +218,36 @@ export class HivePostFooterElement extends withHiveTheme(LitElement) {
             <span>💬</span>
             <span>${currentPost.children}</span>
           </div>
-          ${this.showLink ? html`
-            <a href="https://hive.blog${currentPost.url}" target="_blank" rel="noopener" class="post-url">
-              View on Hive
-            </a>
-          ` : ''}
+          ${this.showLink
+            ? html`
+                <a href="https://hive.blog${currentPost.url}" target="_blank" rel="noopener" class="post-url">
+                  View on Hive
+                </a>
+              `
+            : ""}
         </div>
 
-        ${this.showPayout ? html`
-          <div class="payout-info ${currentPost.cashout_time === "1969-12-31T23:59:59" ? 'paid-out' : 'pending-payout'}">
-            <div class="payout-value">
-              ${formatHiveCurrency(currentPost.cashout_time === "1969-12-31T23:59:59" ? currentPost.total_payout_value : currentPost.pending_payout_value)}
-            </div>
-          </div>
-        ` : ''}
+        ${this.showPayout
+          ? html`
+              <div
+                class="payout-info ${currentPost.cashout_time === "1969-12-31T23:59:59"
+                  ? "paid-out"
+                  : "pending-payout"}"
+              >
+                <div class="payout-value">
+                  ${formatHiveCurrency(
+                    currentPost.cashout_time === "1969-12-31T23:59:59"
+                      ? currentPost.total_payout_value
+                      : currentPost.pending_payout_value
+                  )}
+                </div>
+              </div>
+            `
+          : ""}
       </footer>
 
       ${this.showTags && tags.length > 0
-        ? html`
-            <div class="post-tags">
-              ${tags.slice(0, 5).map(tag => html` <span class="tag">#${tag}</span> `)}
-            </div>
-          `
+        ? html` <div class="post-tags">${tags.slice(0, 5).map(tag => html` <span class="tag">#${tag}</span> `)}</div> `
         : ""}
     `;
   }

@@ -1,13 +1,6 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import {
-  hiveApi,
-  baseStyles,
-  themeStyles,
-  formatHiveDate,
-  formatHiveCurrency,
-  isValidHiveAccount,
-} from "@hiveio/internal";
+import { hiveApi, baseStyles, themeStyles, formatHiveCurrency, isValidHiveAccount } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HiveWitness } from "@hiveio/internal";
 
@@ -220,8 +213,9 @@ export class HiveWitnessElement extends withHiveTheme(LitElement) {
               alt="${this.witness.owner}"
               @error=${(e: Event) => {
                 const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
-                target.parentElement!.textContent = this.getInitials(this.witness?.owner || 'Unknown');
+                target.style.display = "none";
+                if (target.parentElement)
+                  target.parentElement.textContent = this.getInitials(this.witness?.owner || "Unknown");
               }}
             />
           </div>

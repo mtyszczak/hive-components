@@ -81,8 +81,13 @@ export class HiveApiClient {
     return accounts.length > 0 ? accounts[0] || null : null;
   }
 
-  async getDiscussionsByTag(tag: string, limit = 20, start_author?: string, start_permlink?: string): Promise<HivePost[]> {
-    const params: any = { tag, limit };
+  async getDiscussionsByTag(
+    tag: string,
+    limit = 20,
+    start_author?: string,
+    start_permlink?: string
+  ): Promise<HivePost[]> {
+    const params: Record<string, unknown> = { tag, limit };
     if (start_author && start_permlink) {
       params.start_author = start_author;
       params.start_permlink = start_permlink;

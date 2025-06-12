@@ -1,13 +1,6 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import {
-  baseStyles,
-  themeStyles,
-  formatHiveDate,
-  calculateReputation,
-  hiveApi,
-  parseHiveUrl,
-} from "@hiveio/internal";
+import { property, state } from "lit/decorators.js";
+import { baseStyles, themeStyles, formatHiveDate, calculateReputation, hiveApi, parseHiveUrl } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HivePost, HiveComment } from "@hiveio/internal";
 
@@ -187,8 +180,8 @@ export class HivePostHeaderElement extends withHiveTheme(LitElement) {
             alt="${currentPost.author}"
             @error=${(e: Event) => {
               const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              target.parentElement!.textContent = this.getInitials(currentPost.author);
+              target.style.display = "none";
+              if (target.parentElement) target.parentElement.textContent = this.getInitials(currentPost.author);
             }}
           />
         </div>

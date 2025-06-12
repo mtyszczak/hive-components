@@ -1,11 +1,6 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import {
-  hiveApi,
-  baseStyles,
-  themeStyles,
-  parseHiveUrl,
-} from "@hiveio/internal";
+import { property, state } from "lit/decorators.js";
+import { hiveApi, baseStyles, themeStyles, parseHiveUrl } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HiveComment } from "@hiveio/internal";
 import "@hiveio/component-post";
@@ -198,23 +193,11 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
 
     return html`
       <div class="comment ${depth > 0 ? "nested-comment" : ""}">
-        <hive-post-header
-          .post=${comment}
-          .theme=${this.theme}
-          .showTitle=${false}>
-        </hive-post-header>
+        <hive-post-header .post=${comment} .theme=${this.theme} .showTitle=${false}> </hive-post-header>
 
-        <hive-post-content
-          .post=${comment}
-          .theme=${this.theme}
-          .preview=${false}>
-        </hive-post-content>
+        <hive-post-content .post=${comment} .theme=${this.theme} .preview=${false}> </hive-post-content>
 
-        <hive-post-footer
-          .post=${comment}
-          .theme=${this.theme}
-          .showTags=${false}
-          .showLink=${false}>
+        <hive-post-footer .post=${comment} .theme=${this.theme} .showTags=${false} .showLink=${false}>
         </hive-post-footer>
       </div>
     `;
@@ -222,18 +205,18 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
 
   private async loadMoreComments() {
     if (!this.hasMore || this.loading) return;
-    
+
     this.loading = true;
-    
+
     try {
       // Calculate how many more comments to show
       const currentCount = this.comments.length;
       const nextBatchSize = this.initialLimit;
       const newCount = Math.min(currentCount + nextBatchSize, this.allComments.length);
-      
+
       // Show more comments from the already loaded and sorted list
       this.comments = this.allComments.slice(0, newCount);
-      
+
       // Update hasMore flag
       this.hasMore = newCount < this.allComments.length;
     } catch (err) {
@@ -264,9 +247,11 @@ export class HiveCommentsElement extends withHiveTheme(LitElement) {
               <div class="comments-list">${this.comments.map(comment => this.renderComment(comment))}</div>
 
               ${this.hasMore
-                ? html` <button class="load-more-button" @click=${this.loadMoreComments} ?disabled=${this.loading}>
-                    ${this.loading ? "Loading..." : "Load More Comments"}
-                  </button> `
+                ? html`
+                    <button class="load-more-button" @click=${this.loadMoreComments} ?disabled=${this.loading}>
+                      ${this.loading ? "Loading..." : "Load More Comments"}
+                    </button>
+                  `
                 : ""}
             `}
       </div>

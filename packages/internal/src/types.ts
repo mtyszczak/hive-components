@@ -94,12 +94,12 @@ export interface HiveComment {
     weight: number;
   }[];
   active_votes: {
-      voter: string;
-      percent: number;
-      rshares: number;
-      weight: number;
-      reputation: number;
-      time: string;
+    voter: string;
+    percent: number;
+    rshares: number;
+    weight: number;
+    reputation: number;
+    time: string;
   }[];
   url: string;
 }
@@ -126,17 +126,17 @@ export interface HiveAccount {
   name: string;
   owner: {
     weight_threshold: number;
-    account_auths: any[];
+    account_auths: unknown[];
     key_auths: string[][];
   };
   active: {
     weight_threshold: number;
-    account_auths: any[];
+    account_auths: unknown[];
     key_auths: string[][];
   };
   posting: {
     weight_threshold: number;
-    account_auths: any[];
+    account_auths: unknown[];
     key_auths: string[][];
   };
   memo_key: string;

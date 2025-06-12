@@ -7,8 +7,8 @@ export default defineConfig({
       formats: ["es"],
       fileName: "bundle",
     },
-    cssMinify: 'esbuild',
-    minify: 'esbuild',
+    cssMinify: "esbuild",
+    minify: "esbuild",
     sourcemap: true,
     emptyOutDir: false,
     rollupOptions: {

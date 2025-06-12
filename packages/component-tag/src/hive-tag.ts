@@ -1,11 +1,6 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import {
-  hiveApi,
-  baseStyles,
-  themeStyles,
-  truncateText,
-} from "@hiveio/internal";
+import { hiveApi, baseStyles, themeStyles, truncateText } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import { type HivePost, renderPostContent } from "@hiveio/internal";
 import "@hiveio/component-post";
@@ -266,7 +261,6 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
       } else {
         this.posts = posts;
       }
-
     } catch (err) {
       this.error = err instanceof Error ? err.message : "Failed to load posts";
     } finally {
@@ -336,22 +330,24 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
           : html`
               <div class="posts-list">
                 ${this.posts.map(post => {
-                  const preview = truncateText(renderPostContent(post.body, {
-                    breaks: true
-                  }).replace(/<[^>]*>/g, "").replace(/\n/g, " "), this.previewLength);
+                  const preview = truncateText(
+                    renderPostContent(post.body, {
+                      breaks: true,
+                    })
+                      .replace(/<[^>]*>/g, "")
+                      .replace(/\n/g, " "),
+                    this.previewLength
+                  );
 
                   let imageUrl = "";
                   try {
                     imageUrl = JSON.parse(post.json_metadata)?.image?.[0];
+                    /* eslint-disable-next-line no-empty */
                   } catch {}
 
                   return html`
                     <article class="post-item" @click=${() => this.handlePostClick(post)}>
-                      <hive-post-header
-                        .post=${post}
-                        .theme=${this.theme}
-                        .showTitle=${false}>
-                      </hive-post-header>
+                      <hive-post-header .post=${post} .theme=${this.theme} .showTitle=${false}> </hive-post-header>
 
                       <div class="post-content">
                         <img class="preview-img" src="${imageUrl}" alt="Post image" loading="lazy" />
@@ -361,11 +357,7 @@ export class HiveTagElement extends withHiveTheme(LitElement) {
                         </div>
                       </div>
 
-                      <hive-post-footer
-                        .post=${post}
-                        .theme=${this.theme}
-                        .showTags=${false}
-                        .showLink=${false}>
+                      <hive-post-footer .post=${post} .theme=${this.theme} .showTags=${false} .showLink=${false}>
                       </hive-post-footer>
                     </article>
                   `;

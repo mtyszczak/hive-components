@@ -1,13 +1,6 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import {
-  baseStyles,
-  themeStyles,
-  truncateText,
-  hiveApi,
-  parseHiveUrl,
-  renderPostContent
-} from "@hiveio/internal";
+import { property, state } from "lit/decorators.js";
+import { baseStyles, themeStyles, truncateText, hiveApi, parseHiveUrl, renderPostContent } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal/decorators";
 import type { HivePost, HiveComment } from "@hiveio/internal";
 
@@ -85,8 +78,11 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
   }
 
   async updated(changedProperties: Map<string, unknown>) {
-    if ((changedProperties.has("permlink") && this.permlink && !this.post) ||
-        (changedProperties.has("preview") || changedProperties.has("maxLength"))) {
+    if (
+      (changedProperties.has("permlink") && this.permlink && !this.post) ||
+      changedProperties.has("preview") ||
+      changedProperties.has("maxLength")
+    ) {
       if (this.permlink && !this.post) {
         await this.loadPost();
       }
@@ -142,9 +138,7 @@ export class HivePostContentElement extends withHiveTheme(LitElement) {
 
     const body = this.renderPostBody(currentPost.body);
 
-    return html`
-      <div class="post-body" .innerHTML=${body}></div>
-    `;
+    return html` <div class="post-body" .innerHTML=${body}></div> `;
   }
 }
 

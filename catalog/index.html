@@ -203,7 +203,7 @@
           </div>
         </div>
       </div>
-<!--
+      <!--
       <div class="section">
         <div class="section-header">
           <h2>👤 Hive Account Component</h2>
@@ -232,16 +232,17 @@
                 Display a complete Hive post with separate header, content, and footer components.
               </p>
               <div class="code-block">
-                &lt;hive-post theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br>
+                &lt;hive-post theme="light" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br />
               </div>
-              <hive-post theme="light" permlink="@gtg/hello-world"></hive-post-header>
+              <hive-post theme="light" permlink="@gtg/hello-world"></hive-post>
             </div>
 
             <div class="component-demo">
               <h3 class="demo-title">Post Preview</h3>
               <p class="demo-description">Display a truncated preview of a post using separate components.</p>
               <div class="code-block">
-                &lt;hive-post theme="light" preview max-length="100" permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br>
+                &lt;hive-post theme="light" preview max-length="100"
+                permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br />
               </div>
               <hive-post theme="light" preview max-length="100" permlink="@gtg/hello-world"></hive-post>
             </div>
@@ -258,9 +259,13 @@
             <h3 class="demo-title">Post Comments</h3>
             <p class="demo-description">Display threaded comments for a Hive post with nested replies and voting.</p>
             <div class="code-block">
-              &lt;hive-comments theme="light" permlink="@gtg/67juuw-skyteam-airline-alliance-official-partner-of-hivefest"&gt;&lt;/hive-comments&gt;
+              &lt;hive-comments theme="light"
+              permlink="@gtg/67juuw-skyteam-airline-alliance-official-partner-of-hivefest"&gt;&lt;/hive-comments&gt;
             </div>
-            <hive-comments theme="light" permlink="@gtg/67juuw-skyteam-airline-alliance-official-partner-of-hivefest"></hive-comments>
+            <hive-comments
+              theme="light"
+              permlink="@gtg/67juuw-skyteam-airline-alliance-official-partner-of-hivefest"
+            ></hive-comments>
           </div>
         </div>
       </div>
@@ -274,7 +279,8 @@
             <h3 class="demo-title">Tag Posts Feed</h3>
             <p class="demo-description">Display posts from a specific tag with pagination and custom URL templates.</p>
             <div class="code-block">
-              &lt;hive-tag theme="light" tag="photography" posts-per-page="5" preview-length="150" url-template="/photography/{permlink}"&gt;&lt;/hive-tag&gt;
+              &lt;hive-tag theme="light" tag="photography" posts-per-page="5" preview-length="150"
+              url-template="/photography/{permlink}"&gt;&lt;/hive-tag&gt;
             </div>
             <hive-tag
               theme="light"
@@ -296,27 +302,34 @@
             <h3 class="demo-title">Complete Integration Example</h3>
             <p class="demo-description">Here's how you would typically use these components together:</p>
             <div class="code-block">
-              &lt;!-- Prepare imports for our components --&gt;<br>
-              &lt;script type="importmap"&gt;<br>
-              &nbsp;&nbsp;{<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;"imports": {<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"lit": "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js",<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"@hiveio/internal": "http://localhost:8080/example/prebuilt-components/internals.js"<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-              &nbsp;&nbsp;}<br>
-              &lt;/script&gt;<br><br>
+              &lt;!-- Prepare imports for our components --&gt;<br />
+              &lt;script type="importmap"&gt;<br />
+              &nbsp;&nbsp;{<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;"imports": {<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"lit":
+              "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js",<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"@hiveio/internal":
+              "http://localhost:8080/example/prebuilt-components/internals.js"<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;}<br />
+              &nbsp;&nbsp;}<br />
+              &lt;/script&gt;<br /><br />
 
-              &lt;!-- Import components we want --&gt;<br>
-              &lt;script type="module" src="http://localhost:8080/example/prebuilt-components/hive-post.js"&gt;&lt;/script&gt;<br>
-              &lt;script type="module" src="http://localhost:8080/example/prebuilt-components/hive-witness.js"&gt;&lt;/script&gt;<br>
-              &lt;script type="module" src="http://localhost:8080/example/prebuilt-components/hive-comments.js"&gt;&lt;/script&gt;<br>
-              &lt;script type="module" src="http://localhost:8080/example/prebuilt-components/hive-tag.js"&gt;&lt;/script&gt;<br><br>
+              &lt;!-- Import components we want --&gt;<br />
+              &lt;script type="module"
+              src="http://localhost:8080/example/prebuilt-components/hive-post.js"&gt;&lt;/script&gt;<br />
+              &lt;script type="module"
+              src="http://localhost:8080/example/prebuilt-components/hive-witness.js"&gt;&lt;/script&gt;<br />
+              &lt;script type="module"
+              src="http://localhost:8080/example/prebuilt-components/hive-comments.js"&gt;&lt;/script&gt;<br />
+              &lt;script type="module"
+              src="http://localhost:8080/example/prebuilt-components/hive-tag.js"&gt;&lt;/script&gt;<br /><br />
 
-              &lt;!-- Use the components --&gt;<br>
-              &lt;hive-witness account="gtg"&gt;&lt;/hive-witness&gt;<br>
-              &lt;hive-post permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br>
-              &lt;hive-comments permlink="@gtg/hello-world"&gt;&lt;/hive-comments&gt;<br>
-              &lt;hive-tag tag="photography" posts-per-page="4" url-template="/photography/{permlink}"&gt;&lt;/hive-tag&gt;<br>
+              &lt;!-- Use the components --&gt;<br />
+              &lt;hive-witness account="gtg"&gt;&lt;/hive-witness&gt;<br />
+              &lt;hive-post permlink="@gtg/hello-world"&gt;&lt;/hive-post&gt;<br />
+              &lt;hive-comments permlink="@gtg/hello-world"&gt;&lt;/hive-comments&gt;<br />
+              &lt;hive-tag tag="photography" posts-per-page="4"
+              url-template="/photography/{permlink}"&gt;&lt;/hive-tag&gt;<br />
             </div>
           </div>
         </div>
