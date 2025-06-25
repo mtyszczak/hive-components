@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hive POS Components Example</title>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background: #f5f5f5;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .example-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .example-title {
+        margin-top: 0;
+        color: #333;
+        border-bottom: 2px solid #e31337;
+        padding-bottom: 0.5rem;
+      }
+
+      .code-example {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-family: "Courier New", monospace;
+        font-size: 0.875rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <!-- Prepare imports for our components -->
+    <script type="importmap">
+      {
+        "imports": {
+          "lit": "https://cdn.jsdelivr.net/gh/lit/dist@3/core/lit-core.min.js",
+          "@hiveio/internal": "./prebuilt-components/hive-internal.js"
+        }
+      }
+    </script>
+    <!-- Import components we want -->
+    <script type="module" src="./prebuilt-components/hive-pos.js"></script>
+    <script type="module" src="./prebuilt-components/hive-pos-item.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🛍️ Hive POS Components</h1>
+        <p>Point of Sale components for the Hive blockchain</p>
+      </div>
+
+      <div class="example-section">
+        <h2 class="example-title">Hive POS Component</h2>
+        <p>
+          The <code>&lt;hive-pos&gt;</code> component displays a post with a dropdown of available products from
+          comments.
+        </p>
+
+        <div class="code-example">&lt;hive-pos permlink="@wnz/hive-store-example"&gt;&lt;/hive-pos&gt;</div>
+
+        <hive-pos permlink="@wnz/hive-store-example"></hive-pos>
+      </div>
+
+      <div class="grid">
+        <div class="example-section">
+          <h2 class="example-title">Hive POS Item Component</h2>
+          <p>
+            The <code>&lt;hive-pos-item&gt;</code> component renders a single product with Stripe-like payment
+            interface.
+          </p>
+
+          <div class="code-example">
+            &lt;hive-pos-item permlink="@wnz/re-wnz-1750882453160"&gt;&lt;/hive-pos-item&gt;
+          </div>
+
+          <hive-pos-item permlink="@wnz/re-wnz-1750882453160"></hive-pos-item>
+        </div>
+
+        <div class="example-section">
+          <h2 class="example-title">Event Handling</h2>
+          <p>Both components dispatch custom events for payment processing:</p>
+
+          <div class="code-example">
+            // POS component product selection posElement.addEventListener('product-selected', (event) => {
+            console.log('Selected product:', event.detail); }); // POS Item payment events
+            posItemElement.addEventListener('payment-initiated', (event) => { console.log('Payment started:',
+            event.detail); }); posItemElement.addEventListener('payment-completed', (event) => { console.log('Payment
+            completed:', event.detail); });
+          </div>
+
+          <div
+            id="event-log"
+            style="
+              background: #f8f9fa;
+              padding: 1rem;
+              border-radius: 4px;
+              min-height: 100px;
+              font-family: monospace;
+              font-size: 0.8rem;
+            "
+          >
+            Event log will appear here...
+          </div>
+        </div>
+      </div>
+
+      <div class="example-section">
+        <h2 class="example-title">POS Metadata Format</h2>
+        <p>Products are defined using markdown comments in posts or comments:</p>
+
+        <div class="code-example">
+          [//]: # (!hive-pos-title Product Name)<br />
+          [//]: # (!hive-pos-price 10.000 HBD)<br />
+          [//]: # (!hive-pos-image https://example.com/image.jpg)
+        </div>
+
+        <ul>
+          <li><strong>hive-pos-title</strong>: Required. The product name/title</li>
+          <li><strong>hive-pos-price</strong>: Required. Price in HBD or HIVE format</li>
+          <li><strong>hive-pos-image</strong>: Optional. Product image URL</li>
+        </ul>
+      </div>
+    </div>
+
+    <script type="module">
+      // Event logging
+      const eventLog = document.getElementById("event-log");
+      let logMessages = [];
+
+      function addToLog(message) {
+        logMessages.push(new Date().toLocaleTimeString() + ": " + message);
+        if (logMessages.length > 10) {
+          logMessages.shift();
+        }
+        eventLog.textContent = logMessages.join("\n");
+      }
+
+      // Listen for POS events
+      document.addEventListener("product-selected", event => {
+        addToLog(`Product selected: ${event.detail.title} - ${event.detail.price}`);
+      });
+
+      document.addEventListener("payment-initiated", event => {
+        addToLog(`Payment initiated for: ${event.detail.item.title}`);
+      });
+
+      document.addEventListener("payment-completed", event => {
+        addToLog(`Payment completed: ${event.detail.status} for ${event.detail.item.title}`);
+      });
+
+      addToLog("Event listeners registered");
+    </script>
+  </body>
+</html>

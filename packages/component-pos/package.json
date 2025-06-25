@@ -1,0 +1,32 @@
+{
+  "name": "@hiveio/component-pos",
+  "version": "1.0.0",
+  "description": "Hive point-of-sale web component",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "lit": "^3.0.0",
+    "@hiveio/internal": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vite": "^5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

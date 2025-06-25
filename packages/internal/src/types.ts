@@ -113,6 +113,14 @@ export interface HiveTag {
   trending: number;
 }
 
+export interface PosItem {
+  title: string;
+  price: string;
+  image?: string | undefined;
+  author: string;
+  permlink: string;
+}
+
 export type ThemeType = "light" | "dark" | "auto";
 
 export interface ComponentConfig {

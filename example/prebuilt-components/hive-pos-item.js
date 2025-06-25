@@ -1,0 +1,1 @@
+../../packages/component-pos-item/dist/index.js
