@@ -91,47 +91,15 @@
         <hive-pos permlink="@wnz/hive-store-example"></hive-pos>
       </div>
 
-      <div class="grid">
-        <div class="example-section">
-          <h2 class="example-title">Hive POS Item Component</h2>
-          <p>
-            The <code>&lt;hive-pos-item&gt;</code> component renders a single product with Stripe-like payment
-            interface.
-          </p>
+      <div class="example-section">
+        <h2 class="example-title">Hive POS Item Component</h2>
+        <p>
+          The <code>&lt;hive-pos-item&gt;</code> component renders a single product with Stripe-like payment interface.
+        </p>
 
-          <div class="code-example">
-            &lt;hive-pos-item permlink="@wnz/re-wnz-1750882453160"&gt;&lt;/hive-pos-item&gt;
-          </div>
+        <div class="code-example">&lt;hive-pos-item permlink="@wnz/re-wnz-1750882453160"&gt;&lt;/hive-pos-item&gt;</div>
 
-          <hive-pos-item permlink="@wnz/re-wnz-1750882453160"></hive-pos-item>
-        </div>
-
-        <div class="example-section">
-          <h2 class="example-title">Event Handling</h2>
-          <p>Both components dispatch custom events for payment processing:</p>
-
-          <div class="code-example">
-            // POS component product selection posElement.addEventListener('product-selected', (event) => {
-            console.log('Selected product:', event.detail); }); // POS Item payment events
-            posItemElement.addEventListener('payment-initiated', (event) => { console.log('Payment started:',
-            event.detail); }); posItemElement.addEventListener('payment-completed', (event) => { console.log('Payment
-            completed:', event.detail); });
-          </div>
-
-          <div
-            id="event-log"
-            style="
-              background: #f8f9fa;
-              padding: 1rem;
-              border-radius: 4px;
-              min-height: 100px;
-              font-family: monospace;
-              font-size: 0.8rem;
-            "
-          >
-            Event log will appear here...
-          </div>
-        </div>
+        <hive-pos-item permlink="@wnz/re-wnz-1750882453160"></hive-pos-item>
       </div>
 
       <div class="example-section">

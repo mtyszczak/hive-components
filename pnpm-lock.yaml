@@ -150,6 +150,9 @@ importers:
 
   packages/component-pos:
     dependencies:
+      '@hiveio/component-pos-item':
+        specifier: workspace:*
+        version: link:../component-pos-item
       '@hiveio/internal':
         specifier: workspace:*
         version: link:../internal

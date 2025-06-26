@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { hiveApi, baseStyles, themeStyles, parseHiveUrl } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal";
 import type { HivePost, HiveComment, PosItem } from "@hiveio/internal";
+import "@hiveio/component-pos-item";
 
 export class HivePosElement extends withHiveTheme(LitElement) {
   static styles = [
@@ -48,6 +49,7 @@ export class HivePosElement extends withHiveTheme(LitElement) {
 
       .products-section {
         padding: 1rem;
+        border-bottom: 1px solid var(--hive-border);
       }
 
       .products-header {
@@ -71,7 +73,18 @@ export class HivePosElement extends withHiveTheme(LitElement) {
       .product-select:focus {
         outline: none;
         border-color: var(--hive-primary);
-        box-shadow: 0 0 0 2px var(--hive-primary);
+        box-shadow: 0 0 0 2px rgba(var(--hive-primary-rgb), 0.2);
+      }
+
+      .checkout-section {
+        padding: 1rem;
+      }
+
+      .checkout-item {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
       }
 
       .loading {
@@ -90,6 +103,15 @@ export class HivePosElement extends withHiveTheme(LitElement) {
         text-align: center;
         padding: 2rem;
         color: var(--hive-on-surface-variant);
+      }
+
+      @media (max-width: 768px) {
+        .pos-header,
+        .post-content,
+        .products-section,
+        .checkout-section {
+          padding: 0.75rem;
+        }
       }
     `,
   ];
@@ -114,10 +136,43 @@ export class HivePosElement extends withHiveTheme(LitElement) {
 
   @state()
   private selectedProduct = "";
-
   connectedCallback() {
     super.connectedCallback();
     this.loadData();
+
+    // Listen for payment events from the embedded pos-item component
+    this.addEventListener("payment-initiated", this.handlePaymentInitiated.bind(this) as EventListener);
+    this.addEventListener("payment-completed", this.handlePaymentCompleted.bind(this) as EventListener);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener("payment-initiated", this.handlePaymentInitiated.bind(this) as EventListener);
+    this.removeEventListener("payment-completed", this.handlePaymentCompleted.bind(this) as EventListener);
+  }
+
+  private handlePaymentInitiated(event: Event) {
+    // Re-dispatch the event to allow parent components to listen
+    const customEvent = event as CustomEvent;
+    console.log("Payment initiated:", customEvent.detail);
+    this.dispatchEvent(
+      new CustomEvent("pos-payment-initiated", {
+        detail: customEvent.detail,
+        bubbles: true,
+      })
+    );
+  }
+
+  private handlePaymentCompleted(event: Event) {
+    // Re-dispatch the event to allow parent components to listen
+    const customEvent = event as CustomEvent;
+    console.log("Payment completed:", customEvent.detail);
+    this.dispatchEvent(
+      new CustomEvent("pos-payment-completed", {
+        detail: customEvent.detail,
+        bubbles: true,
+      })
+    );
   }
 
   updated(changedProperties: Map<string, unknown>) {
@@ -193,19 +248,6 @@ export class HivePosElement extends withHiveTheme(LitElement) {
   private handleProductSelect(event: Event) {
     const select = event.target as HTMLSelectElement;
     this.selectedProduct = select.value;
-
-    // Dispatch custom event with selected product
-    if (this.selectedProduct) {
-      const selectedPosItem = this.products.find(p => `${p.author}/${p.permlink}` === this.selectedProduct);
-
-      if (selectedPosItem) {
-        const event = new CustomEvent("product-selected", {
-          detail: selectedPosItem,
-          bubbles: true,
-        });
-        this.dispatchEvent(event);
-      }
-    }
   }
 
   render() {
@@ -244,6 +286,18 @@ export class HivePosElement extends withHiveTheme(LitElement) {
                   )}
                 </select>
               </div>
+
+              ${this.selectedProduct
+                ? html`
+                    <div class="checkout-section">
+                      <hive-pos-item
+                        class="checkout-item"
+                        permlink="${this.selectedProduct}"
+                        .theme=${this.theme}
+                      ></hive-pos-item>
+                    </div>
+                  `
+                : ""}
             `
           : html` <div class="empty-state">No products available</div> `}
       </div>

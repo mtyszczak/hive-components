@@ -10,36 +10,211 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
     themeStyles,
     css`
       :host {
-        display: block;
-        max-width: 400px;
+        display: flex;
+        max-width: 900px;
         margin: 0 auto;
-        border: 1px solid var(--hive-border);
-        border-radius: 12px;
         background: var(--hive-surface);
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
         overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         font-family: var(--hive-font-family, "Inter", sans-serif);
+        min-height: 600px;
       }
 
       .pos-item-container {
         display: flex;
+        width: 100%;
+      }
+
+      .left-panel {
+        flex: 1;
+        background: var(--hive-surface-variant);
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        position: relative;
+      }
+
+      .merchant-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--hive-border);
+      }
+
+      .merchant-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--hive-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+
+      .merchant-details {
+        flex: 1;
+      }
+
+      .merchant-name {
+        font-weight: 600;
+        color: var(--hive-on-surface);
+        font-size: 1rem;
+        margin: 0 0 0.25rem 0;
+      }
+
+      .merchant-label {
+        font-size: 0.875rem;
+        color: var(--hive-on-surface-variant);
+        margin: 0;
+      }
+
+      .order-summary {
+        flex: 1;
+        display: flex;
         flex-direction: column;
       }
 
-      .item-image {
-        width: 100%;
-        height: 240px;
-        object-fit: cover;
-        background: var(--hive-surface-variant);
+      .order-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--hive-on-surface);
+        margin: 0 0 1.5rem 0;
+        line-height: 1.2;
+      }
+
+      .order-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--hive-border);
+      }
+
+      .item-thumbnail {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        background: var(--hive-surface);
         display: flex;
         align-items: center;
         justify-content: center;
         color: var(--hive-on-surface-variant);
-        font-size: 3rem;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+        object-fit: cover;
       }
 
-      .item-content {
-        padding: 1.5rem;
+      .item-details {
+        flex: 1;
+      }
+
+      .item-name {
+        font-weight: 500;
+        color: var(--hive-on-surface);
+        margin: 0 0 0.25rem 0;
+        font-size: 0.9rem;
+      }
+
+      .item-quantity {
+        font-size: 0.8rem;
+        color: var(--hive-on-surface-variant);
+        margin: 0;
+      }
+
+      .item-price-display {
+        font-weight: 600;
+        color: var(--hive-on-surface);
+        font-size: 0.9rem;
+        flex-shrink: 0;
+      }
+
+      .order-totals {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--hive-border);
+      }
+
+      .total-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .total-line.final {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--hive-on-surface);
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--hive-border);
+      }
+
+      .total-label {
+        color: var(--hive-on-surface-variant);
+        font-size: 0.9rem;
+      }
+
+      .total-amount {
+        color: var(--hive-on-surface);
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: none;
+        border: none;
+        color: var(--hive-on-surface-variant);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        padding: 0.5rem;
+        border-radius: 6px;
+        transition: background-color 0.2s ease;
+      }
+
+      .back-button:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      .item-image {
+        width: 280px;
+        height: 280px;
+        object-fit: cover;
+        border-radius: 12px;
+        background: var(--hive-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--hive-on-surface-variant);
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .merchant-info {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .right-panel {
+        flex: 1;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        background: var(--hive-surface);
       }
 
       .item-title {
@@ -50,67 +225,126 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         line-height: 1.3;
       }
 
-      .item-price {
-        margin: 0 0 1rem 0;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--hive-primary);
-      }
-
       .item-description {
-        margin: 0 0 1.5rem 0;
+        margin: 0 0 2rem 0;
         color: var(--hive-on-surface-variant);
-        line-height: 1.5;
+        line-height: 1.6;
         font-size: 0.875rem;
-      }
-
-      .merchant-info {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1.5rem;
-        padding: 0.75rem;
-        background: var(--hive-surface-variant);
-        border-radius: 8px;
-      }
-
-      .merchant-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--hive-primary);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 600;
-        font-size: 0.875rem;
-      }
-
-      .merchant-details {
         flex: 1;
       }
 
-      .merchant-name {
-        font-weight: 600;
-        color: var(--hive-on-surface);
-        font-size: 0.875rem;
-        margin: 0;
+      .qr-section {
+        margin-bottom: 1.5rem;
+        text-align: center;
       }
 
-      .merchant-label {
-        font-size: 0.75rem;
-        color: var(--hive-on-surface-variant);
-        margin: 0;
-      }
-
-      .payment-section {
-        border-top: 1px solid var(--hive-border);
-        padding: 1.5rem;
+      .qr-code {
+        width: 200px;
+        height: 200px;
         background: var(--hive-surface-variant);
+        border: 2px solid var(--hive-border);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem auto;
+        font-size: 1rem;
+        color: var(--hive-on-surface-variant);
       }
 
-      .payment-button {
+      .qr-instructions {
+        font-size: 0.875rem;
+        color: var(--hive-on-surface-variant);
+        margin-bottom: 1rem;
+      }
+
+      .payment-divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: var(--hive-on-surface-variant);
+        font-size: 0.875rem;
+      }
+
+      .payment-divider::before,
+      .payment-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--hive-border);
+      }
+
+      .payment-divider span {
+        padding: 0 1rem;
+      }
+
+      .payment-methods {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .payment-method {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: 1px solid var(--hive-border);
+        border-radius: 8px;
+        background: var(--hive-surface);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+      }
+
+      .payment-method:hover {
+        border-color: var(--hive-primary);
+        background: color-mix(in srgb, var(--hive-primary) 5%, var(--hive-surface));
+      }
+
+      .payment-method.selected {
+        border-color: var(--hive-primary);
+        background: color-mix(in srgb, var(--hive-primary) 10%, var(--hive-surface));
+      }
+
+      .payment-method-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .payment-method-name {
+        flex: 1;
+        font-weight: 500;
+        color: var(--hive-on-surface);
+      }
+
+      .payment-method-radio {
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--hive-border);
+        border-radius: 50%;
+        position: relative;
+      }
+
+      .payment-method.selected .payment-method-radio {
+        border-color: var(--hive-primary);
+      }
+
+      .payment-method.selected .payment-method-radio::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 8px;
+        height: 8px;
+        background: var(--hive-primary);
+        border-radius: 50%;
+      }
+
+      .pay-button {
         width: 100%;
         padding: 1rem;
         border: none;
@@ -121,67 +355,192 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
+        margin-top: 1.5rem;
       }
 
-      .payment-button:hover {
+      .pay-button:hover {
+        background: color-mix(in srgb, var(--hive-primary) 90%, black);
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 
-      .payment-button:active {
+      .pay-button:active {
         transform: translateY(0);
       }
 
-      .payment-button:disabled {
+      .pay-button:disabled {
         opacity: 0.6;
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
       }
 
-      .payment-icon {
-        font-size: 1.25rem;
-      }
-
       .loading {
-        text-align: center;
-        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
         color: var(--hive-on-surface-variant);
       }
 
       .error {
-        text-align: center;
-        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
         color: var(--hive-error);
         background: color-mix(in srgb, var(--hive-error) 10%, transparent);
         border-radius: 8px;
         margin: 1rem;
+        text-align: center;
       }
 
       .empty-state {
-        text-align: center;
-        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 400px;
         color: var(--hive-on-surface-variant);
+        text-align: center;
       }
 
-      @media (max-width: 480px) {
+      @media (max-width: 768px) {
         :host {
+          flex-direction: column;
           max-width: 100%;
           border-radius: 0;
-          border-left: none;
-          border-right: none;
+          min-height: auto;
         }
 
-        .item-content {
+        .pos-item-container {
+          flex-direction: column;
+        }
+
+        .left-panel {
+          padding: 1.5rem;
+          min-height: auto;
+        }
+
+        .merchant-header {
+          margin-bottom: 1rem;
+          padding-bottom: 0.75rem;
+        }
+
+        .merchant-avatar {
+          width: 32px;
+          height: 32px;
+          font-size: 0.875rem;
+        }
+
+        .order-title {
+          font-size: 1.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .item-thumbnail {
+          width: 50px;
+          height: 50px;
+          font-size: 1.25rem;
+        }
+
+        .right-panel {
+          padding: 1.5rem;
+          border-top: 1px solid var(--hive-border);
+        }
+
+        .item-title {
+          font-size: 1.25rem;
+        }
+
+        .item-price {
+          font-size: 1.75rem;
+          margin-bottom: 1rem;
+        }
+
+        .item-description {
+          margin-bottom: 1.5rem;
+        }
+
+        .qr-code {
+          width: 150px;
+          height: 150px;
+        }
+
+        .payment-methods {
+          gap: 0.5rem;
+        }
+
+        .payment-method {
+          padding: 0.75rem;
+        }
+
+        .pay-button {
+          margin-top: 1rem;
+          padding: 0.875rem;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .left-panel {
           padding: 1rem;
         }
 
-        .payment-section {
+        .right-panel {
           padding: 1rem;
+        }
+
+        .item-title {
+          font-size: 1.125rem;
+        }
+
+        .order-title {
+          font-size: 1.25rem;
+        }
+
+        .item-thumbnail {
+          width: 40px;
+          height: 40px;
+          font-size: 1rem;
+        }
+
+        .merchant-avatar {
+          width: 28px;
+          height: 28px;
+          font-size: 0.75rem;
+        }
+
+        .item-price {
+          font-size: 1.5rem;
+        }
+
+        .qr-code {
+          width: 120px;
+          height: 120px;
+        }
+
+        .payment-method {
+          padding: 0.625rem;
+          font-size: 0.875rem;
+        }
+
+        .pay-button {
+          padding: 0.75rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (min-width: 769px) and (max-width: 1024px) {
+        :host {
+          max-width: 800px;
+        }
+
+        .item-image {
+          width: 240px;
+          height: 240px;
+        }
+
+        .order-title {
+          font-size: 1.6rem;
         }
       }
     `,
@@ -205,9 +564,16 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
   @state()
   private processingPayment = false;
 
+  @state()
+  private selectedPaymentMethod = "qr";
+
+  @state()
+  private qrCode = "";
+
   connectedCallback() {
     super.connectedCallback();
     this.loadItem();
+    this.generateQRCode();
   }
 
   updated(changedProperties: Map<string, unknown>) {
@@ -237,6 +603,8 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
       if (!this.posItem) {
         throw new Error("No POS item metadata found in this post");
       }
+
+      this.generateQRCode();
     } catch (error) {
       this.error = error instanceof Error ? error.message : "Failed to load item";
       console.error("Error loading POS item:", error);
@@ -286,17 +654,37 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
     );
   }
 
+  private generateQRCode() {
+    if (!this.posItem) return;
+
+    // Generate a simple payment URL for Hive Keychain QR scanning
+    const paymentData = {
+      to: this.posItem.author,
+      amount: this.posItem.price,
+      memo: `Payment for: ${this.posItem.title}`,
+      permlink: this.posItem.permlink,
+    };
+
+    // In a real implementation, you'd use a QR code library
+    this.qrCode = JSON.stringify(paymentData);
+  }
+
+  private handlePaymentMethodChange(method: string) {
+    this.selectedPaymentMethod = method;
+  }
+
   private handlePayment() {
     if (!this.posItem || this.processingPayment) return;
 
     this.processingPayment = true;
 
-    // Dispatch payment event with item details
+    // Dispatch payment event with item details and selected method
     const paymentEvent = new CustomEvent("payment-initiated", {
       detail: {
         item: this.posItem,
         amount: this.posItem.price,
         recipient: this.posItem.author,
+        method: this.selectedPaymentMethod,
       },
       bubbles: true,
     });
@@ -314,6 +702,7 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
             item: this.posItem,
             amount: this.posItem.price,
             recipient: this.posItem.author,
+            method: this.selectedPaymentMethod,
             status: "success",
           },
           bubbles: true,
@@ -326,10 +715,85 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
 
   private renderImage() {
     if (this.posItem?.image) {
-      return html`<img src="${this.posItem.image}" alt="${this.posItem.title}" class="item-image" />`;
+      return html`<img src="${this.posItem.image}" alt="${this.posItem.title}" class="item-thumbnail" />`;
     }
 
-    return html` <div class="item-image">📦</div> `;
+    return html` <div class="item-thumbnail">📦</div> `;
+  }
+
+  private renderOrderSummary() {
+    if (!this.posItem) return html``;
+
+    // Parse the price to get numeric value and currency
+    // const priceMatch = this.posItem.price.match(/^(\d+(?:\.\d+)?)\s*(.+)$/);
+    // const priceAmount = priceMatch ? priceMatch[1] : this.posItem.price;
+    // const currency = priceMatch ? priceMatch[2] : '';
+
+    return html`
+      <div class="order-summary">
+        <h2 class="order-title">Pay ${this.posItem.author}</h2>
+
+        <div class="order-item">
+          ${this.renderImage()}
+          <div class="item-details">
+            <p class="item-name">${this.posItem.title}</p>
+            <p class="item-quantity">Qty: 1</p>
+          </div>
+          <div class="item-price-display">${this.posItem.price}</div>
+        </div>
+
+        <div class="order-totals">
+          <div class="total-line">
+            <span class="total-label">Subtotal</span>
+            <span class="total-amount">${this.posItem.price}</span>
+          </div>
+          <div class="total-line">
+            <span class="total-label">Processing fee</span>
+            <span class="total-amount">Free</span>
+          </div>
+          <div class="total-line final">
+            <span class="total-label">Total due</span>
+            <span class="total-amount">${this.posItem.price}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  private renderQRCode() {
+    return html`
+      <div class="qr-section">
+        <div class="qr-code">
+          ${this.qrCode ? html`<span>QR Code<br />📱</span>` : html`<span>Generating QR...</span>`}
+        </div>
+        <div class="qr-instructions">Scan with Hive Keychain mobile app</div>
+      </div>
+    `;
+  }
+
+  private renderPaymentMethods() {
+    const methods = [
+      { id: "metamask", name: "MetaMask", icon: "🦊" },
+      { id: "keychain", name: "Hive Keychain", icon: "🔗" },
+      { id: "peakvault", name: "PeakVault", icon: "⛰️" },
+    ];
+
+    return html`
+      <div class="payment-methods">
+        ${methods.map(
+          method => html`
+            <div
+              class="payment-method ${this.selectedPaymentMethod === method.id ? "selected" : ""}"
+              @click=${() => this.handlePaymentMethodChange(method.id)}
+            >
+              <div class="payment-method-icon">${method.icon}</div>
+              <div class="payment-method-name">${method.name}</div>
+              <div class="payment-method-radio"></div>
+            </div>
+          `
+        )}
+      </div>
+    `;
   }
 
   render() {
@@ -347,27 +811,39 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
 
     return html`
       <div class="pos-item-container">
-        ${this.renderImage()}
-
-        <div class="item-content">
-          <h2 class="item-title">${this.posItem.title}</h2>
-          <div class="item-price">${this.posItem.price}</div>
-
-          ${this.post.body ? html` <p class="item-description">${this.getCleanedDescription(this.post.body)}</p> ` : ""}
-
-          <div class="merchant-info">
+        <!-- Left Panel - Order Summary -->
+        <div class="left-panel">
+          <div class="merchant-header">
             <div class="merchant-avatar">${this.posItem.author.charAt(0).toUpperCase()}</div>
             <div class="merchant-details">
               <p class="merchant-name">@${this.posItem.author}</p>
               <p class="merchant-label">Merchant</p>
             </div>
           </div>
+
+          ${this.renderOrderSummary()}
         </div>
 
-        <div class="payment-section">
-          <button class="payment-button" @click=${this.handlePayment} ?disabled=${this.processingPayment}>
-            <span class="payment-icon"> ${this.processingPayment ? "⏳" : "💳"} </span>
-            <span> ${this.processingPayment ? "Processing..." : `Pay ${this.posItem.price}`} </span>
+        <!-- Right Panel - Payment -->
+        <div class="right-panel">
+          <h1 class="item-title">Payment details</h1>
+
+          ${this.post.body ? html` <p class="item-description">${this.getCleanedDescription(this.post.body)}</p> ` : ""}
+
+          <!-- QR Code Section -->
+          ${this.selectedPaymentMethod === "qr" ? this.renderQRCode() : ""}
+
+          <!-- Payment Divider -->
+          <div class="payment-divider">
+            <span>Or pay another way</span>
+          </div>
+
+          <!-- Payment Methods -->
+          ${this.renderPaymentMethods()}
+
+          <!-- Pay Button -->
+          <button class="pay-button" @click=${this.handlePayment} ?disabled=${this.processingPayment}>
+            ${this.processingPayment ? "Processing..." : `Pay ${this.posItem.price}`}
           </button>
         </div>
       </div>
