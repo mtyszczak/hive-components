@@ -122,8 +122,8 @@ export class HivePosElement extends withHiveTheme(LitElement) {
   @state()
   private post: HivePost | null = null;
 
-  @state()
-  private comments: HiveComment[] = [];
+  @property({ type: String, reflect: true, attribute: "front-base-url" })
+  frontBaseUrl = "https://hive.blog";
 
   @state()
   private products: PosItem[] = [];
@@ -202,7 +202,6 @@ export class HivePosElement extends withHiveTheme(LitElement) {
       ]);
 
       this.post = post;
-      this.comments = comments;
       this.products = this.extractProductsFromComments(comments);
     } catch (error) {
       this.error = error instanceof Error ? error.message : "Failed to load data";
@@ -269,10 +268,6 @@ export class HivePosElement extends withHiveTheme(LitElement) {
           <h2 class="pos-title">${this.post.title}</h2>
         </div>
 
-        <div class="post-content">
-          <div class="post-body">${this.renderPostBody(this.post.body)}</div>
-        </div>
-
         ${this.products.length > 0
           ? html`
               <div class="products-section">
@@ -281,7 +276,9 @@ export class HivePosElement extends withHiveTheme(LitElement) {
                   <option value="">Select a product...</option>
                   ${this.products.map(
                     product => html`
-                      <option value="${product.author}/${product.permlink}">${product.title} - ${product.price}</option>
+                      <option value="@${product.author}/${product.permlink}">
+                        ${product.title} - ${product.price}
+                      </option>
                     `
                   )}
                 </select>
@@ -293,6 +290,7 @@ export class HivePosElement extends withHiveTheme(LitElement) {
                       <hive-pos-item
                         class="checkout-item"
                         permlink="${this.selectedProduct}"
+                        .frontBaseUrl=${this.frontBaseUrl}
                         .theme=${this.theme}
                       ></hive-pos-item>
                     </div>
@@ -302,15 +300,6 @@ export class HivePosElement extends withHiveTheme(LitElement) {
           : html` <div class="empty-state">No products available</div> `}
       </div>
     `;
-  }
-
-  private renderPostBody(body: string) {
-    // Simple markdown-like rendering for basic formatting
-    return body
-      .split("\n")
-      .map(line => line.trim())
-      .filter(line => line.length > 0 && !line.startsWith("[//]:"))
-      .map(line => html`<p>${line}</p>`);
   }
 }
 

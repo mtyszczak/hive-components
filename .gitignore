@@ -14,3 +14,4 @@ Thumbs.db
 *.tar.gz
 .pnpm-debug.log*
 *.tsbuildinfo
+vite.config.ts.timestamp-*

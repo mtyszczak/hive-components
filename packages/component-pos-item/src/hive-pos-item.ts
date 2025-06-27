@@ -4,6 +4,8 @@ import { hiveApi, baseStyles, themeStyles, parseHiveUrl } from "@hiveio/internal
 import { withHiveTheme } from "@hiveio/internal";
 import type { HivePost, PosItem } from "@hiveio/internal";
 
+import { toDataURL } from "qrcode";
+
 export class HivePosItemElement extends withHiveTheme(LitElement) {
   static styles = [
     baseStyles,
@@ -48,7 +50,6 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: var(--hive-primary);
         color: white;
         display: flex;
         align-items: center;
@@ -56,6 +57,12 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         font-weight: 600;
         font-size: 1rem;
         flex-shrink: 0;
+      }
+
+      .merchant-avatar > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .merchant-details {
@@ -73,6 +80,11 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         font-size: 0.875rem;
         color: var(--hive-on-surface-variant);
         margin: 0;
+      }
+
+      .pos-item-container a {
+        color: var(--hive-primary);
+        text-decoration: none;
       }
 
       .order-summary {
@@ -94,7 +106,6 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         align-items: center;
         gap: 1rem;
         padding: 1rem 0;
-        border-bottom: 1px solid var(--hive-border);
       }
 
       .item-thumbnail {
@@ -218,7 +229,7 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
       }
 
       .item-title {
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 1.5rem 0;
         font-size: 1.25rem;
         font-weight: 600;
         color: var(--hive-on-surface);
@@ -234,13 +245,19 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
       }
 
       .qr-section {
-        margin-bottom: 1.5rem;
         text-align: center;
+      }
+
+      .qr-code > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       .qr-code {
         width: 200px;
         height: 200px;
+        padding: 10px;
         background: var(--hive-surface-variant);
         border: 2px solid var(--hive-border);
         border-radius: 8px;
@@ -464,6 +481,7 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         .qr-code {
           width: 150px;
           height: 150px;
+          padding: 8px;
         }
 
         .payment-methods {
@@ -516,6 +534,7 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         .qr-code {
           width: 120px;
           height: 120px;
+          padding: 5px;
         }
 
         .payment-method {
@@ -549,6 +568,9 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
   @property({ type: String })
   permlink = "";
 
+  @property({ type: String, reflect: true, attribute: "front-base-url" })
+  frontBaseUrl = "https://hive.blog";
+
   @state()
   private post: HivePost | null = null;
 
@@ -560,6 +582,12 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
 
   @state()
   private error: string | null = null;
+
+  @state()
+  private paymentError: Error | null = null;
+
+  @state()
+  private paid = false;
 
   @state()
   private processingPayment = false;
@@ -579,6 +607,13 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
   updated(changedProperties: Map<string, unknown>) {
     if (changedProperties.has("permlink")) {
       this.loadItem();
+    }
+    if (changedProperties.has("theme")) {
+      this.generateQRCode();
+    }
+    if (changedProperties.has("selectedPaymentMethod")) {
+      this.paymentError = null;
+      this.paid = false;
     }
   }
 
@@ -640,43 +675,43 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
     return match && match[1] ? match[1].trim() : null;
   }
 
-  private getCleanedDescription(body: string): string {
-    // Remove POS metadata comments and return clean description
-    return (
-      body
-        .replace(/\[\/\/\]:\s*#\s*\(!hive-pos-[^)]+\)/gi, "")
-        .split("\n")
-        .map(line => line.trim())
-        .filter(line => line.length > 0)
-        .slice(0, 3) // First 3 paragraphs
-        .join(" ")
-        .substring(0, 200) + (body.length > 200 ? "..." : "")
-    );
-  }
-
-  private generateQRCode() {
+  private async generateQRCode() {
     if (!this.posItem) return;
 
     // Generate a simple payment URL for Hive Keychain QR scanning
-    const paymentData = {
-      to: this.posItem.author,
-      amount: this.posItem.price,
-      memo: `Payment for: ${this.posItem.title}`,
-      permlink: this.posItem.permlink,
-    };
+    const paymentData = [
+      "transfer",
+      {
+        from: "",
+        to: this.posItem.author,
+        amount: this.posItem.price,
+        memo: `Payment for '${this.posItem.title}' | Hive Components`,
+      },
+    ];
 
-    // In a real implementation, you'd use a QR code library
-    this.qrCode = JSON.stringify(paymentData);
+    const strTx = JSON.stringify(paymentData);
+
+    const paymentUrl = `hive://sign/op/${btoa(strTx)}`;
+
+    this.qrCode = await toDataURL(paymentUrl, {
+      margin: 0,
+      color: {
+        dark: this.theme === "light" ? "#000f" : "#ffff",
+        light: this.theme === "light" ? "#fff0" : "#0000",
+      },
+    });
   }
 
   private handlePaymentMethodChange(method: string) {
     this.selectedPaymentMethod = method;
   }
 
-  private handlePayment() {
+  private async handlePayment() {
     if (!this.posItem || this.processingPayment) return;
 
     this.processingPayment = true;
+    if (this.paid) this.paid = false;
+    if (this.paymentError) this.paymentError = null;
 
     // Dispatch payment event with item details and selected method
     const paymentEvent = new CustomEvent("payment-initiated", {
@@ -691,11 +726,30 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
 
     this.dispatchEvent(paymentEvent);
 
-    // Simulate payment processing
-    setTimeout(() => {
-      this.processingPayment = false;
-
+    try {
       if (this.posItem) {
+        const amountRaw = this.posItem.price.replace(/[^0-9.]/g, "");
+        const amount = parseFloat(amountRaw);
+        const currency = this.posItem.price.replace(/[\d.]/g, "").trim();
+        const memo = `Payment for '${this.posItem.title}' | Hive Components`;
+
+        if (this.selectedPaymentMethod === "keychain") {
+          await new Promise((res, rej) => {
+            /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+            (window as any).hive_keychain.requestTransfer(
+              ".",
+              this.posItem?.author,
+              amountRaw,
+              memo,
+              currency,
+              (data: { error?: Error }) => (data.error ? rej(data) : res(data))
+            );
+          });
+        } else {
+          /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+          await (window as any).peakvault.requestTransfer("", this.posItem.author, amount, currency, memo);
+        }
+
         // Dispatch success event
         const successEvent = new CustomEvent("payment-completed", {
           detail: {
@@ -709,8 +763,33 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         });
 
         this.dispatchEvent(successEvent);
+
+        this.paid = true;
+        setTimeout(() => {
+          this.paid = false;
+          this.selectedPaymentMethod = "qr"; // Reset to QR method after payment
+        }, 3000);
       }
-    }, 2000);
+    } catch (error) {
+      console.error("Payment processing error:", error);
+      this.paymentError = error as Error;
+      // Dispatch error event
+      const errorEvent = new CustomEvent("payment-error", {
+        detail: {
+          item: this.posItem,
+          amount: this.posItem.price,
+          recipient: this.posItem.author,
+          method: this.selectedPaymentMethod,
+          status: "error",
+          message: error instanceof Error ? error.message : "Unknown error",
+        },
+        bubbles: true,
+      });
+
+      this.dispatchEvent(errorEvent);
+    } finally {
+      this.processingPayment = false;
+    }
   }
 
   private renderImage() {
@@ -736,7 +815,11 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         <div class="order-item">
           ${this.renderImage()}
           <div class="item-details">
-            <p class="item-name">${this.posItem.title}</p>
+            <p class="item-name">
+              <a href="${this.frontBaseUrl}/@${this.posItem.author}/${this.posItem.permlink}" target="_blank"
+                >${this.posItem.title}</a
+              >
+            </p>
             <p class="item-quantity">Qty: 1</p>
           </div>
           <div class="item-price-display">${this.posItem.price}</div>
@@ -764,34 +847,48 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
     return html`
       <div class="qr-section">
         <div class="qr-code">
-          ${this.qrCode ? html`<span>QR Code<br />📱</span>` : html`<span>Generating QR...</span>`}
+          ${this.qrCode ? html`<img src="${this.qrCode}" />` : html`<span>Generating QR...</span>`}
         </div>
         <div class="qr-instructions">Scan with Hive Keychain mobile app</div>
       </div>
     `;
   }
 
+  private getInitials(name: string): string {
+    return name.substring(0, 2).toUpperCase();
+  }
+
+  private getProfileImageUrl(author: string): string {
+    return `https://images.hive.blog/u/${author}/avatar/medium`;
+  }
+
   private renderPaymentMethods() {
-    const methods = [
-      { id: "metamask", name: "MetaMask", icon: "🦊" },
-      { id: "keychain", name: "Hive Keychain", icon: "🔗" },
-      { id: "peakvault", name: "PeakVault", icon: "⛰️" },
-    ];
+    const methods = [];
+
+    // TODO: Add MetaMask
+    // if ("ethereum" in window && window.ethereum && typeof window.ethereum === "object" && "isMetaMask" in window.ethereum && window.ethereum.isMetaMask)
+    //   methods.push({ id: "metamask", name: "MetaMask", icon: "🦊" });
+
+    if ("hive_keychain" in window) methods.push({ id: "keychain", name: "Hive Keychain", icon: "🔗" });
+
+    if ("peakvault" in window) methods.push({ id: "peakvault", name: "PeakVault", icon: "⛰️" });
 
     return html`
       <div class="payment-methods">
-        ${methods.map(
-          method => html`
-            <div
-              class="payment-method ${this.selectedPaymentMethod === method.id ? "selected" : ""}"
-              @click=${() => this.handlePaymentMethodChange(method.id)}
-            >
-              <div class="payment-method-icon">${method.icon}</div>
-              <div class="payment-method-name">${method.name}</div>
-              <div class="payment-method-radio"></div>
-            </div>
-          `
-        )}
+        ${methods.length === 0
+          ? "No other methods available"
+          : methods.map(
+              method => html`
+                <div
+                  class="payment-method ${this.selectedPaymentMethod === method.id ? "selected" : ""}"
+                  @click=${() => this.handlePaymentMethodChange(method.id)}
+                >
+                  <div class="payment-method-icon">${method.icon}</div>
+                  <div class="payment-method-name">${method.name}</div>
+                  <div class="payment-method-radio"></div>
+                </div>
+              `
+            )}
       </div>
     `;
   }
@@ -814,7 +911,18 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         <!-- Left Panel - Order Summary -->
         <div class="left-panel">
           <div class="merchant-header">
-            <div class="merchant-avatar">${this.posItem.author.charAt(0).toUpperCase()}</div>
+            <div class="merchant-avatar">
+              <img
+                src="${this.getProfileImageUrl(this.posItem.author)}"
+                alt="${this.posItem.author}"
+                @error=${(e: Event) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = "none";
+                  if (target.parentElement)
+                    target.parentElement.textContent = this.getInitials(this.posItem?.author || "UNKNOWN");
+                }}
+              />
+            </div>
             <div class="merchant-details">
               <p class="merchant-name">@${this.posItem.author}</p>
               <p class="merchant-label">Merchant</p>
@@ -828,10 +936,8 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         <div class="right-panel">
           <h1 class="item-title">Payment details</h1>
 
-          ${this.post.body ? html` <p class="item-description">${this.getCleanedDescription(this.post.body)}</p> ` : ""}
-
           <!-- QR Code Section -->
-          ${this.selectedPaymentMethod === "qr" ? this.renderQRCode() : ""}
+          ${this.renderQRCode()}
 
           <!-- Payment Divider -->
           <div class="payment-divider">
@@ -842,8 +948,18 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
           ${this.renderPaymentMethods()}
 
           <!-- Pay Button -->
-          <button class="pay-button" @click=${this.handlePayment} ?disabled=${this.processingPayment}>
-            ${this.processingPayment ? "Processing..." : `Pay ${this.posItem.price}`}
+          <button
+            class="pay-button"
+            @click=${this.handlePayment}
+            ?disabled=${this.processingPayment || this.selectedPaymentMethod === "qr"}
+          >
+            ${this.paymentError
+              ? "❌ Error processing payment"
+              : this.processingPayment
+                ? "Processing..."
+                : this.paid
+                  ? "Paid ✅"
+                  : `Pay ${this.posItem.price}`}
           </button>
         </div>
       </div>

@@ -295,6 +295,38 @@
 
       <div class="section">
         <div class="section-header">
+          <h2>🛍️ Hive POS Component</h2>
+        </div>
+        <div class="section-content">
+          <div class="component-demo">
+            <h3 class="demo-title">Hive Point of Sell</h3>
+            <p class="demo-description">Point of Sale components for the Hive blockchain.</p>
+            <div class="code-block">
+              &lt;hive-pos theme="light" permlink="@wnz/hive-store-example"&gt;&lt;/hive-pos&gt;
+            </div>
+            <hive-pos theme="light" permlink="@wnz/hive-store-example"></hive-pos>
+          </div>
+          <div class="section-content">
+            <h2 class="demo-title">POS Metadata Format</h2>
+            <p class="demo-description">Products are defined using markdown comments in posts or comments:</p>
+
+            <div class="code-block">
+              [//]: # (!hive-pos-title Product Name)<br />
+              [//]: # (!hive-pos-price 10.000 HBD)<br />
+              [//]: # (!hive-pos-image https://example.com/image.jpg)
+            </div>
+
+            <ul>
+              <li><strong>hive-pos-title</strong>: Required. The product name/title</li>
+              <li><strong>hive-pos-price</strong>: Required. Price in HBD or HIVE format</li>
+              <li><strong>hive-pos-image</strong>: Optional. Product image URL</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
           <h2>📚 Usage Examples</h2>
         </div>
         <div class="section-content">
@@ -319,6 +351,7 @@
               &lt;script type="module" src="https://gtg.openhive.network/5bb236/hive-witness.js"&gt;&lt;/script&gt;<br />
               &lt;script type="module" src="https://gtg.openhive.network/5bb236/hive-comments.js"&gt;&lt;/script&gt;<br />
               &lt;script type="module" src="https://gtg.openhive.network/5bb236/hive-tag.js"&gt;&lt;/script&gt;<br /><br />
+              &lt;script type="module" src="https://gtg.openhive.network/5bb236/hive-pos.js"&gt;&lt;/script&gt;<br />
 
               &lt;!-- Use the components --&gt;<br />
               &lt;hive-witness account="gtg"&gt;&lt;/hive-witness&gt;<br />
@@ -326,6 +359,7 @@
               &lt;hive-comments permlink="@gtg/hello-world"&gt;&lt;/hive-comments&gt;<br />
               &lt;hive-tag tag="photography" posts-per-page="4"
               url-template="/photography/{permlink}"&gt;&lt;/hive-tag&gt;<br />
+              &lt;hive-pos permlink="@wnz/hive-store-example"&gt;&lt;/hive-pos&gt;<br />
             </div>
           </div>
         </div>
@@ -339,10 +373,14 @@
       import "../packages/component-post/dist/index.js";
       import "../packages/component-comments/dist/index.js";
       import "../packages/component-tag/dist/index.js";
+      import "../packages/component-pos-item/dist/index.js";
+      import "../packages/component-pos/dist/index.js";
 
       // Theme switching functionality
       const themeButtons = document.querySelectorAll(".theme-button");
-      const components = document.querySelectorAll("hive-witness, hive-account, hive-post, hive-comments, hive-tag");
+      const components = document.querySelectorAll(
+        "hive-witness, hive-account, hive-post, hive-comments, hive-tag, hive-pos, hive-pos-item"
+      );
 
       themeButtons.forEach(button => {
         button.addEventListener("click", () => {

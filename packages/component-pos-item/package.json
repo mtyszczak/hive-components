@@ -19,10 +19,12 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "dependencies": {
+    "@hiveio/internal": "workspace:*",
     "lit": "^3.0.0",
-    "@hiveio/internal": "workspace:*"
+    "qrcode": "^1.5.4"
   },
   "devDependencies": {
+    "@types/qrcode": "^1.5.4",
     "typescript": "^5.0.0",
     "vite": "^5.0.0"
   },
