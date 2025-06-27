@@ -129,28 +129,72 @@ export interface ComponentConfig {
   fallbackData?: unknown;
 }
 
+// Asset structure used in database_api responses
+export interface HiveAsset {
+  amount: string;
+  nai: string;
+  precision: number;
+}
+
+// Authority structure for owner, active, posting keys
+export interface HiveAuthority {
+  weight_threshold: number;
+  account_auths: [string, number][];
+  key_auths: [string, number][];
+}
+
+export interface HiveAccountRest {
+  id: number;
+  name: string;
+  can_vote: boolean;
+  mined: boolean;
+  proxy: string;
+  recovery_account: string;
+  last_account_recovery: string;
+  created: string;
+  reputation: number;
+  pending_claimed_accounts: number;
+  json_metadata: string;
+  posting_json_metadata: string;
+  profile_image: string;
+  hbd_balance: number;
+  balance: number;
+  vesting_shares: string;
+  vesting_balance: number;
+  hbd_saving_balance: number;
+  savings_balance: number;
+  savings_withdraw_requests: number;
+  reward_hbd_balance: number;
+  reward_hive_balance: number;
+  reward_vesting_balance: string;
+  reward_vesting_hive: number;
+  posting_rewards: string;
+  curation_rewards: string;
+  delegated_vesting_shares: string;
+  received_vesting_shares: string;
+  proxied_vsf_votes: string[];
+  withdrawn: string;
+  vesting_withdraw_rate: string;
+  to_withdraw: string;
+  withdraw_routes: number;
+  delayed_vests: string;
+  witness_votes: string[];
+  witnesses_voted_for: number;
+  ops_count: number;
+  is_witness: boolean;
+}
+
 export interface HiveAccount {
   id: number;
   name: string;
-  owner: {
-    weight_threshold: number;
-    account_auths: unknown[];
-    key_auths: string[][];
-  };
-  active: {
-    weight_threshold: number;
-    account_auths: unknown[];
-    key_auths: string[][];
-  };
-  posting: {
-    weight_threshold: number;
-    account_auths: unknown[];
-    key_auths: string[][];
-  };
+  owner: HiveAuthority;
+  active: HiveAuthority;
+  posting: HiveAuthority;
   memo_key: string;
   json_metadata: string;
   posting_json_metadata: string;
   proxy: string;
+  previous_owner_update: string;
   last_owner_update: string;
   last_account_update: string;
   created: string;
@@ -163,18 +207,18 @@ export interface HiveAccount {
   post_count: number;
   can_vote: boolean;
   voting_manabar: {
-    current_mana: string;
+    current_mana: number;
     last_update_time: number;
   };
   downvote_manabar: {
-    current_mana: string;
+    current_mana: number;
     last_update_time: number;
   };
-  voting_power: number;
-  balance: string;
-  savings_balance: string;
-  hbd_balance: string;
-  savings_hbd_balance: string;
+  post_voting_power: HiveAsset;
+  balance: HiveAsset;
+  savings_balance: HiveAsset;
+  hbd_balance: HiveAsset;
+  savings_hbd_balance: HiveAsset;
   hbd_seconds: string;
   hbd_seconds_last_update: string;
   hbd_last_interest_payment: string;
@@ -182,26 +226,72 @@ export interface HiveAccount {
   savings_hbd_seconds_last_update: string;
   savings_hbd_last_interest_payment: string;
   savings_withdraw_requests: number;
-  reward_hbd_balance: string;
-  reward_hive_balance: string;
-  reward_vesting_balance: string;
-  reward_vesting_hive: string;
-  vesting_shares: string;
-  delegated_vesting_shares: string;
-  received_vesting_shares: string;
-  vesting_withdraw_rate: string;
+  reward_hbd_balance: HiveAsset;
+  reward_hive_balance: HiveAsset;
+  reward_vesting_balance: HiveAsset;
+  reward_vesting_hive: HiveAsset;
+  vesting_shares: HiveAsset;
+  delegated_vesting_shares: HiveAsset;
+  received_vesting_shares: HiveAsset;
+  vesting_withdraw_rate: HiveAsset;
   next_vesting_withdrawal: string;
-  withdrawn: string;
-  to_withdraw: string;
+  withdrawn: number;
+  to_withdraw: number;
   withdraw_routes: number;
   curation_rewards: number;
   posting_rewards: number;
-  proxied_vsf_votes: [string, number][];
+  proxied_vsf_votes: [number, number, number, number];
   witnesses_voted_for: number;
   last_post: string;
+  last_post_edit: string;
   last_root_post: string;
   last_vote_time: string;
   post_bandwidth: number;
   pending_claimed_accounts: number;
-  reputation: number;
+  pending_transfers: number;
+  open_recurrent_transfers: number;
+  delayed_votes: unknown[];
+  governance_vote_expiration_ts: string;
+  is_smt: boolean;
+}
+
+export interface HiveDynamicGlobalProperties {
+  head_block_number: number;
+  head_block_id: string;
+  time: string;
+  current_witness: string;
+  total_pow: number;
+  num_pow_witnesses: number;
+  virtual_supply: HiveAsset;
+  current_supply: HiveAsset;
+  confidential_supply: HiveAsset;
+  current_hbd_supply: HiveAsset;
+  confidential_hbd_supply: HiveAsset;
+  init_hbd_supply: HiveAsset;
+  total_vesting_fund_hive: HiveAsset;
+  total_vesting_shares: HiveAsset;
+  total_reward_fund_hive: HiveAsset;
+  total_reward_shares2: string;
+  pending_rewarded_vesting_shares: HiveAsset;
+  pending_rewarded_vesting_hive: HiveAsset;
+  hbd_interest_rate: number;
+  hbd_print_rate: number;
+  maximum_block_size: number;
+  required_actions_partition_percent: number;
+  current_aslot: number;
+  recent_slots_filled: string;
+  participation_count: number;
+  last_irreversible_block_num: number;
+  vote_power_reserve_rate: number;
+  delegation_return_period: number;
+  reverse_auction_seconds: number;
+  available_account_subsidies: number;
+  hbd_stop_percent: number;
+  hbd_start_percent: number;
+  next_maintenance_time: string;
+  last_budget_time: string;
+  next_daily_maintenance_time: string;
+  content_reward_percent: number;
+  vesting_reward_percent: number;
+  proposal_fund_percent: number;
 }

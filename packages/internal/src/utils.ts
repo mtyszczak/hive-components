@@ -1,3 +1,5 @@
+import type { HiveAsset } from "./types.js";
+
 /**
  * Utility functions for Hive components
  */
@@ -40,14 +42,16 @@ export function formatHiveCurrency(value: string): string {
 }
 
 /**
- * Calculates Hive reputation score
+ * Calculates Hive reputation score from string or number reputation
  */
-export function calculateReputation(reputation: number): number {
-  if (reputation === 0) return 25;
+export function calculateReputation(reputation: string | number): number {
+  const rep = typeof reputation === "string" ? parseInt(reputation, 10) : reputation;
 
-  let score = Math.log10(Math.abs(reputation));
+  if (rep === 0) return 25;
+
+  let score = Math.log10(Math.abs(rep));
   score = Math.max(score - 9, 0);
-  score *= reputation < 0 ? -9 : 9;
+  score *= rep < 0 ? -9 : 9;
   score += 25;
 
   return Math.floor(score);
@@ -131,4 +135,53 @@ export function safeDefineCustomElement(name: string, constructor: CustomElement
   if (!customElements.get(name)) {
     customElements.define(name, constructor);
   }
+}
+
+/**
+ * Converts HiveAsset to formatted string
+ */
+export function formatHiveAsset(asset: HiveAsset): string {
+  const amount = parseFloat(asset.amount) / Math.pow(10, asset.precision);
+  const currency = getCurrencyFromNai(asset.nai);
+  return `${amount.toFixed(asset.precision)} ${currency}`;
+}
+
+/**
+ * Gets currency symbol from NAI (Number Asset Identifier)
+ */
+export function getCurrencyFromNai(nai: string): string {
+  switch (nai) {
+    case "@@000000021":
+      return "HIVE";
+    case "@@000000013":
+      return "HBD";
+    case "@@000000037":
+      return "VESTS";
+    default:
+      return "UNKNOWN";
+  }
+}
+
+/**
+ * Converts HiveAsset to numeric value
+ */
+export function hiveAssetToNumber(asset: HiveAsset): number {
+  return parseFloat(asset.amount) / Math.pow(10, asset.precision);
+}
+
+/**
+ * Calculates HIVE Power from vesting shares using HiveAsset format
+ */
+export function calculateHivePowerFromAssets(
+  vestingShares: HiveAsset,
+  totalVestingFundHive: HiveAsset,
+  totalVestingShares: HiveAsset
+): number {
+  const shares = hiveAssetToNumber(vestingShares);
+  const totalFund = hiveAssetToNumber(totalVestingFundHive);
+  const totalSharesNum = hiveAssetToNumber(totalVestingShares);
+
+  if (totalSharesNum === 0) return 0;
+
+  return (shares * totalFund) / totalSharesNum;
 }

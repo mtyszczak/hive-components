@@ -1,4 +1,12 @@
-import type { HivePost, HiveWitness, HiveComment, HiveTag, HiveAccount } from "./types.js";
+import type {
+  HivePost,
+  HiveWitness,
+  HiveComment,
+  HiveTag,
+  HiveAccount,
+  HiveDynamicGlobalProperties,
+  HiveAccountRest,
+} from "./types.js";
 
 const DEFAULT_API_ENDPOINTS = [
   "https://api.hive.blog",
@@ -73,12 +81,33 @@ export class HiveApiClient {
   }
 
   async getAccounts(accounts: string[]): Promise<HiveAccount[]> {
-    return this.makeRequest("condenser_api.get_accounts", [accounts]);
+    const result = (await this.makeRequest("database_api.find_accounts", { accounts })) as { accounts: HiveAccount[] };
+
+    return result.accounts || []; // Ensure we return an empty array if no accounts found
+  }
+
+  async getAccountRest(account: string): Promise<HiveAccountRest> {
+    try {
+      const response = await fetch(`https://api.hive.blog/hafbe-api/accounts/${account}`);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data as HiveAccountRest;
+    } catch (error) {
+      console.warn(`Failed to fetch account from the REST API for ${account}:`, error);
+
+      throw error;
+    }
   }
 
   async getAccount(account: string): Promise<HiveAccount | null> {
-    const accounts = await this.getAccounts([account]);
-    return accounts.length > 0 ? accounts[0] || null : null;
+    const result = await this.getAccounts([account]);
+    return result && result.length > 0 ? result[0] || null : null;
+  }
+
+  async getDynamicGlobalProperties(): Promise<HiveDynamicGlobalProperties> {
+    return this.makeRequest("database_api.get_dynamic_global_properties", {});
   }
 
   async getDiscussionsByTag(

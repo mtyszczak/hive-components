@@ -5,12 +5,12 @@ import {
   baseStyles,
   themeStyles,
   formatHiveDate,
-  formatHiveCurrency,
-  calculateReputation,
+  formatHiveAsset,
+  calculateHivePowerFromAssets,
   isValidHiveAccount,
 } from "@hiveio/internal";
 import { withHiveTheme } from "@hiveio/internal";
-import type { HiveAccount } from "@hiveio/internal";
+import type { HiveAccount, HiveAccountRest, HiveDynamicGlobalProperties } from "@hiveio/internal";
 
 @customElement("hive-account")
 export class HiveAccountElement extends withHiveTheme(LitElement) {
@@ -100,6 +100,7 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
         font-weight: 600;
         color: var(--hive-on-surface);
         margin: 0;
+        word-break: break-all;
       }
 
       .stat-label {
@@ -174,9 +175,110 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
         font-weight: 500;
       }
 
+      .mana-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .mana-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.5rem;
+        background: var(--hive-surface-variant);
+        border-radius: 4px;
+      }
+
+      .mana-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.875rem;
+      }
+
+      .mana-label {
+        color: var(--hive-on-surface-variant);
+      }
+
+      .mana-value {
+        color: var(--hive-on-surface);
+        font-weight: 500;
+      }
+
+      .mana-bar {
+        height: 4px;
+        background: var(--hive-border);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+
+      .mana-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--hive-primary), color-mix(in srgb, var(--hive-primary) 80%, white));
+        transition: width 0.3s ease;
+      }
+
+      .account-powers {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+
+      .power-item {
+        text-align: center;
+        padding: 0.75rem;
+        background: var(--hive-surface-variant);
+        border-radius: 6px;
+      }
+
+      .power-value {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--hive-on-surface);
+        margin: 0;
+      }
+
+      .power-label {
+        font-size: 0.75rem;
+        color: var(--hive-on-surface-variant);
+        margin: 0.25rem 0 0 0;
+      }
+
+      .json-metadata {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: var(--hive-surface-variant);
+        border-radius: 4px;
+        font-size: 0.875rem;
+      }
+
+      .json-metadata summary {
+        cursor: pointer;
+        color: var(--hive-on-surface-variant);
+        font-weight: 500;
+      }
+
+      .json-metadata pre {
+        margin: 0.5rem 0 0 0;
+        padding: 0.5rem;
+        background: var(--hive-surface);
+        border-radius: 4px;
+        font-size: 0.75rem;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
       @media (max-width: 640px) {
         .account-stats {
           grid-template-columns: repeat(2, 1fr);
+        }
+
+        .account-powers {
+          grid-template-columns: 1fr;
         }
       }
     `,
@@ -186,6 +288,8 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
   account = "";
 
   private accountData: HiveAccount | null = null;
+  private globalProps: HiveDynamicGlobalProperties | null = null;
+  private accountRestData: HiveAccountRest | null = null;
 
   @state()
   private loading = false;
@@ -216,7 +320,17 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
     this.error = "";
 
     try {
-      this.accountData = await hiveApi.getAccount(this.account);
+      // Load account data, global properties, and reputation in parallel
+      const [accountData, globalProps, restAccountData] = await Promise.all([
+        hiveApi.getAccount(this.account),
+        hiveApi.getDynamicGlobalProperties(),
+        hiveApi.getAccountRest(this.account),
+      ]);
+
+      this.accountData = accountData;
+      this.globalProps = globalProps;
+      this.accountRestData = restAccountData;
+
       if (!this.accountData) {
         this.error = "Account not found";
       }
@@ -235,10 +349,60 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
     return name.substring(0, 2).toUpperCase();
   }
 
-  private getVestingHive(vestingShares: string): number {
-    // Simple conversion - in a real app you'd get the dynamic global properties
-    const shares = parseFloat(vestingShares.replace(" VESTS", ""));
-    return Math.round(shares / 1000000); // Approximate conversion
+  private getHivePower(): number {
+    if (!this.accountData || !this.globalProps) return 0;
+
+    return calculateHivePowerFromAssets(
+      this.accountData.vesting_shares,
+      this.globalProps.total_vesting_fund_hive,
+      this.globalProps.total_vesting_shares
+    );
+  }
+
+  private getDelegatedHivePower(): number {
+    if (!this.accountData || !this.globalProps) return 0;
+
+    return calculateHivePowerFromAssets(
+      this.accountData.delegated_vesting_shares,
+      this.globalProps.total_vesting_fund_hive,
+      this.globalProps.total_vesting_shares
+    );
+  }
+
+  private getReceivedHivePower(): number {
+    if (!this.accountData || !this.globalProps) return 0;
+
+    return calculateHivePowerFromAssets(
+      this.accountData.received_vesting_shares,
+      this.globalProps.total_vesting_fund_hive,
+      this.globalProps.total_vesting_shares
+    );
+  }
+
+  private getEffectiveHivePower(): number {
+    return Math.round(this.getHivePower() - this.getDelegatedHivePower() + this.getReceivedHivePower());
+  }
+
+  private getManaPercentage(manabar: { current_mana: string | number; last_update_time: number }): string {
+    const now = Math.round(Date.now() / 1000);
+    const elapsed = BigInt(now - manabar.last_update_time);
+    const maxMana = BigInt(this.getEffectiveHivePower()) * BigInt(1000000); // Convert to VESTS
+
+    // Mana regenerates at 20% per day
+    const regenRate = BigInt(1 / (0.2 / (24 * 60 * 60))); // per second
+    const calculatedMana = BigInt(manabar.current_mana) + BigInt((elapsed * maxMana) / regenRate);
+    const currentMana = calculatedMana > maxMana ? maxMana : calculatedMana;
+    const manaPercentage = Number((currentMana * BigInt(1000)) / maxMana) / 10;
+
+    return manaPercentage > 100 ? "100" : String(manaPercentage.toFixed(1));
+  }
+
+  private parseJsonMetadata(jsonStr: string): Record<string, unknown> | null {
+    try {
+      return JSON.parse(jsonStr);
+    } catch {
+      return null;
+    }
   }
 
   render() {
@@ -250,12 +414,14 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
       return html`<div class="error">${this.error}</div>`;
     }
 
-    if (!this.accountData) {
+    if (!this.accountData || !this.accountRestData) {
       return html`<div class="error">No account data available</div>`;
     }
 
     const account = this.accountData;
-    const reputation = calculateReputation(account.reputation);
+    const accountRestData = this.accountRestData;
+    const jsonMetadata = this.parseJsonMetadata(account.json_metadata);
+    const postingJsonMetadata = this.parseJsonMetadata(account.posting_json_metadata);
 
     return html`
       <div class="account-card">
@@ -274,8 +440,8 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
           <div class="account-info">
             <h3>${account.name}</h3>
             <p>
-              <!-- TODO: Add on REST API: <span class="reputation">${reputation}</span>
-              • -->Joined ${formatHiveDate(account.created)}
+              <span class="reputation">${accountRestData.reputation}</span>
+              • Joined ${formatHiveDate(account.created)}
             </p>
           </div>
         </div>
@@ -283,39 +449,74 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
         <div class="account-stats">
           <div class="stat-item">
             <div class="stat-value">${account.post_count.toLocaleString()}</div>
-            <div class="stat-label">Posts</div>
+            <div class="stat-label">Posts and comments</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value">${(account.voting_power / 100).toFixed(2)}%</div>
-            <div class="stat-label">Voting Power</div>
+            <div class="stat-value">${accountRestData.pending_claimed_accounts.toLocaleString()}</div>
+            <div class="stat-label">Accounts to claim</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value">${account.lifetime_vote_count.toLocaleString()}</div>
-            <div class="stat-label">Votes Cast</div>
+            <div class="stat-value">${accountRestData.ops_count.toLocaleString()}</div>
+            <div class="stat-label">Operations count</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value">${this.getVestingHive(account.vesting_shares).toLocaleString()}</div>
-            <div class="stat-label">HIVE Power</div>
+            <div class="stat-value">${account.curation_rewards.toLocaleString()}</div>
+            <div class="stat-label">Curation Rewards</div>
+          </div>
+        </div>
+
+        <div class="account-powers">
+          <div class="power-item">
+            <div class="power-value">${this.getHivePower().toLocaleString()}</div>
+            <div class="power-label">HIVE Power</div>
+          </div>
+          <div class="power-item">
+            <div class="power-value">${this.getDelegatedHivePower().toLocaleString()} HP</div>
+            <div class="power-label">Delegated Out</div>
+          </div>
+          <div class="power-item">
+            <div class="power-value">${this.getReceivedHivePower().toLocaleString()} HP</div>
+            <div class="power-label">Delegated In</div>
+          </div>
+          <div class="power-item">
+            <div class="power-value">${this.getEffectiveHivePower().toLocaleString()}</div>
+            <div class="power-label">Effective HP</div>
           </div>
         </div>
 
         <div class="account-balances">
           <div class="balance-item">
             <span class="balance-label">HIVE Balance:</span>
-            <span class="balance-value">${formatHiveCurrency(account.balance)}</span>
+            <span class="balance-value">${formatHiveAsset(account.balance)}</span>
           </div>
           <div class="balance-item">
             <span class="balance-label">HBD Balance:</span>
-            <span class="balance-value">${formatHiveCurrency(account.hbd_balance)}</span>
+            <span class="balance-value">${formatHiveAsset(account.hbd_balance)}</span>
           </div>
           <div class="balance-item">
             <span class="balance-label">Savings (HIVE):</span>
-            <span class="balance-value">${formatHiveCurrency(account.savings_balance)}</span>
+            <span class="balance-value">${formatHiveAsset(account.savings_balance)}</span>
           </div>
           <div class="balance-item">
             <span class="balance-label">Savings (HBD):</span>
-            <span class="balance-value">${formatHiveCurrency(account.savings_hbd_balance)}</span>
+            <span class="balance-value">${formatHiveAsset(account.savings_hbd_balance)}</span>
           </div>
+          ${account.reward_hive_balance && parseFloat(account.reward_hive_balance.amount) > 0
+            ? html`
+                <div class="balance-item">
+                  <span class="balance-label">Unclaimed HIVE:</span>
+                  <span class="balance-value">${formatHiveAsset(account.reward_hive_balance)}</span>
+                </div>
+              `
+            : ""}
+          ${account.reward_hbd_balance && parseFloat(account.reward_hbd_balance.amount) > 0
+            ? html`
+                <div class="balance-item">
+                  <span class="balance-label">Unclaimed HBD:</span>
+                  <span class="balance-value">${formatHiveAsset(account.reward_hbd_balance)}</span>
+                </div>
+              `
+            : ""}
         </div>
 
         <div class="account-meta">
@@ -335,7 +536,41 @@ export class HiveAccountElement extends withHiveTheme(LitElement) {
                 </div>
               `
             : ""}
+          <div class="meta-item">
+            <span class="meta-label">Last Active:</span>
+            <span class="meta-value">${formatHiveDate(account.last_vote_time)}</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Last Post:</span>
+            <span class="meta-value">${formatHiveDate(account.last_root_post)}</span>
+          </div>
         </div>
+
+        ${jsonMetadata || postingJsonMetadata
+          ? html`
+              <div class="json-metadata">
+                <details>
+                  <summary>Account Metadata</summary>
+                  ${jsonMetadata
+                    ? html`
+                        <div>
+                          <strong>Profile Metadata:</strong>
+                          <pre>${JSON.stringify(jsonMetadata, null, 2)}</pre>
+                        </div>
+                      `
+                    : ""}
+                  ${postingJsonMetadata
+                    ? html`
+                        <div>
+                          <strong>Posting Metadata:</strong>
+                          <pre>${JSON.stringify(postingJsonMetadata, null, 2)}</pre>
+                        </div>
+                      `
+                    : ""}
+                </details>
+              </div>
+            `
+          : ""}
       </div>
     `;
   }
