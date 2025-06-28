@@ -248,7 +248,12 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
         text-align: center;
       }
 
-      .qr-code > img {
+      .qr-code > a {
+        width: 100%;
+        height: 100%;
+      }
+
+      .qr-code > a > img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -598,6 +603,9 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
   @state()
   private qrCode = "";
 
+  @state()
+  private paymentUrl = "";
+
   connectedCallback() {
     super.connectedCallback();
     this.loadItem();
@@ -691,9 +699,9 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
 
     const strTx = JSON.stringify(paymentData);
 
-    const paymentUrl = `hive://sign/op/${btoa(strTx)}`;
+    this.paymentUrl = `hive://sign/op/${btoa(strTx)}`;
 
-    this.qrCode = await toDataURL(paymentUrl, {
+    this.qrCode = await toDataURL(this.paymentUrl, {
       margin: 0,
       color: {
         dark: this.theme === "light" ? "#000f" : "#ffff",
@@ -847,9 +855,11 @@ export class HivePosItemElement extends withHiveTheme(LitElement) {
     return html`
       <div class="qr-section">
         <div class="qr-code">
-          ${this.qrCode ? html`<img src="${this.qrCode}" />` : html`<span>Generating QR...</span>`}
+          ${this.qrCode
+            ? html`<a href="${this.paymentUrl}"><img src="${this.qrCode}" /></a>`
+            : html`<span>Generating QR...</span>`}
         </div>
-        <div class="qr-instructions">Scan with Hive Keychain mobile app</div>
+        <div class="qr-instructions">Scan with Hive Keychain mobile app<br />Or click to pay on mobile</div>
       </div>
     `;
   }
